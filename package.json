@@ -19,5 +19,8 @@
   "homepage": "https://github.com/lukso-network/tools-lsp6-signer#readme",
   "devDependencies": {
     "jest": "^29.0.2"
+  },
+  "dependencies": {
+    "eth-lib": "^0.1.29"
   }
 }
