@@ -1,0 +1,26 @@
+{
+  "name": "tools-lsp6-signer",
+  "version": "1.0.0",
+  "description": "Allows to sign an LSP6 `executeRelayCall()` calldata",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/lukso-network/tools-lsp6-signer.git"
+  },
+  "keywords": [],
+  "author": "Magali Morin",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/lukso-network/tools-lsp6-signer/issues"
+  },
+  "homepage": "https://github.com/lukso-network/tools-lsp6-signer#readme",
+  "devDependencies": {
+    "jest": "^29.0.2"
+  },
+  "dependencies": {
+    "eth-lib": "^0.1.29"
+  }
+}
