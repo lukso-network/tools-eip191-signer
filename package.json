@@ -1,7 +1,7 @@
 {
-  "name": "tools-lsp6-signer",
+  "name": "@lukso/lsp6-signer.js",
   "version": "1.0.0",
-  "description": "Allows to sign an LSP6 `executeRelayCall()` calldata",
+  "description": "Helper Librairy to allows to sign an LSP6 `executeRelayCall()` calldata",
   "main": "index.js",
   "scripts": {
     "test": "jest"
