@@ -1,5 +1,8 @@
 import { LSP6Signer } from "../src/index.js";
 
+const signingKey =
+  "ffeb17b9a6059fec3bbab63d76b060b7380cac7a62ce6621a134531a46458968";
+
 describe("Hash message function", () => {
   const lsp6Signer = new LSP6Signer();
   const hash = lsp6Signer.hashMessage("hello");
@@ -13,8 +16,6 @@ describe("Hash message function", () => {
 
 describe("Sign transaction function", () => {
   const lsp6Signer = new LSP6Signer();
-  const signingKey =
-    "ffeb17b9a6059fec3bbab63d76b060b7380cac7a62ce6621a134531a46458968";
   const signedObject = lsp6Signer.sign("hello", signingKey);
   it("should give back an object with the right properties", () => {
     expect(signedObject).toHaveProperty("message");
@@ -28,8 +29,6 @@ describe("Sign transaction function", () => {
 
 describe("Recover the address function of a transaction", () => {
   const lsp6Signer = new LSP6Signer();
-  const signingKey =
-    "ffeb17b9a6059fec3bbab63d76b060b7380cac7a62ce6621a134531a46458968";
   const signingAddress = "0x2b389f8EB52D16A105e02165a2AC1450461A237b";
   const messageInfo = lsp6Signer.sign("hello", signingKey);
   const message = messageInfo.message;

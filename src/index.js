@@ -30,7 +30,7 @@ export class LSP6Signer {
     var hash = this.hashMessage(message);
     var signature = Account.sign(hash, privateKey);
     var vrs = Account.decodeSignature(signature);
-    var messageInfo = {
+    return {
       message: message,
       messageHash: hash,
       v: vrs[0],
@@ -38,7 +38,6 @@ export class LSP6Signer {
       s: vrs[2],
       signature: signature,
     };
-    return messageInfo;
   }
 
   recover(message, signature, isMessagePrefixed) {
