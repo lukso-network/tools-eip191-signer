@@ -16,11 +16,12 @@ npm install @lukso/lsp6-signer.js
 ## Setup
 
 ```javascript
+
 ```
 
 ## Usage
 
-### Allows to sign an LSP6 `executeRelayCall()` calldata
+###
 
 ## Contributing
 
