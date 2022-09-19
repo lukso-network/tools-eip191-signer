@@ -4,7 +4,7 @@ on:
   workflow_dispatch:
   push:
     branches:
-      - 'main'
+      - "main"
 
 jobs:
   release:
@@ -24,10 +24,10 @@ jobs:
       - name: Use Node.js 16.x
         uses: actions/setup-node@v2
         with:
-          node-version: '16.x'
-          registry-url: 'https://registry.npmjs.org'
-          scope: '@lukso'
-          cache: 'npm'
+          node-version: "16.x"
+          registry-url: "https://registry.npmjs.org"
+          scope: "@lukso"
+          cache: "npm"
 
       - name: 🔍 Check if version changed
         uses: EndBug/version-check@v1
@@ -85,7 +85,7 @@ jobs:
         if: env.SHOULD_RELEASE == 'true'
         uses: ncipollo/release-action@v1
         with:
-          bodyFile: 'RELEASENOTES.md'
+          bodyFile: "RELEASENOTES.md"
           token: ${{ secrets.GITHUB_TOKEN }}
           tag: ${{ env.APP_VERSION }}
 

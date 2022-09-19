@@ -47,8 +47,7 @@ export class LSP6Signer {
     signature: string,
     isMessagePrefixed: boolean
   ): string {
-    const args = [].slice.apply(arguments);
-    // const args = arguments
+    const args = [].slice.apply([message, signature, isMessagePrefixed]);
 
     if (!!message && typeof message === "object") {
       return this.recover(
