@@ -4,20 +4,22 @@
 import Account from "eth-lib/lib/account";
 import utils from "web3-utils";
 import { bufferToHex, keccak256 } from "ethereumjs-util";
+import { Message } from "../src/interfaces";
+
 export class LSP6Signer {
-  hashMessage(message) {
-    var messageHex = utils.isHexStrict(message)
+  hashMessage(message: string) {
+    const messageHex = utils.isHexStrict(message)
       ? message
       : utils.utf8ToHex(message);
-    var messageBytes = utils.hexToBytes(messageHex);
-    var messageBuffer = Buffer.from(messageBytes);
-    var preamble = "\x19LSP6 Execute Relay Call:\n" + messageBytes.length;
-    var preambleBuffer = Buffer.from(preamble);
-    var ethMessage = Buffer.concat([preambleBuffer, messageBuffer]);
+    const messageBytes = utils.hexToBytes(messageHex);
+    const messageBuffer = Buffer.from(messageBytes);
+    const preamble = "\x19LSP6 Execute Relay Call:\n" + messageBytes.length;
+    const preambleBuffer = Buffer.from(preamble);
+    const ethMessage = Buffer.concat([preambleBuffer, messageBuffer]);
     return bufferToHex(keccak256(ethMessage));
   }
 
-  sign(message, privateKey) {
+  sign(message: string, privateKey: string): Message {
     if (!privateKey.startsWith("0x")) {
       privateKey = "0x" + privateKey;
     }
@@ -27,9 +29,9 @@ export class LSP6Signer {
       throw new Error("Private key must be 32 bytes long");
     }
 
-    var hash = this.hashMessage(message);
-    var signature = Account.sign(hash, privateKey);
-    var vrs = Account.decodeSignature(signature);
+    const hash = this.hashMessage(message);
+    const signature = Account.sign(hash, privateKey);
+    const vrs = Account.decodeSignature(signature);
     return {
       message: message,
       messageHash: hash,
@@ -40,21 +42,23 @@ export class LSP6Signer {
     };
   }
 
-  recover(message, signature, isMessagePrefixed) {
-    var args = [].slice.apply(arguments);
-    // const args = arguments
+  recover(
+    message: string | Message,
+    signature: string,
+    isMessagePrefixed: boolean
+  ): string {
+    const args = [].slice.apply([message, signature, isMessagePrefixed]);
 
     if (!!message && typeof message === "object") {
-      const messageInfo = message;
       return this.recover(
-        messageInfo.messageHash,
-        Account.encodeSignature([messageInfo.v, messageInfo.r, messageInfo.s]),
+        message.messageHash,
+        Account.encodeSignature([message.v, message.r, message.s]),
         true
       );
     }
 
     if (!isMessagePrefixed) {
-      message = this.hashMessage(message);
+      message = this.hashMessage(message as string);
     }
 
     if (args.length >= 4) {
