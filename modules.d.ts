@@ -1,1 +1,1 @@
-declare module "eth-lib/lib/account";
+declare module 'eth-lib/lib/account';
