@@ -4,7 +4,7 @@ on:
   workflow_dispatch:
   push:
     branches:
-      - "main"
+      - 'main'
 
 jobs:
   release:
@@ -17,17 +17,17 @@ jobs:
         run: |-
           echo "Not running on main - exit"
           exit 1
-      - uses: actions/checkout@v2
+      - uses: actions/checkout@v3
         with:
           fetch-depth: 0
 
       - name: Use Node.js 16.x
-        uses: actions/setup-node@v2
+        uses: actions/setup-node@v3
         with:
-          node-version: "16.x"
-          registry-url: "https://registry.npmjs.org"
-          scope: "@lukso"
-          cache: "npm"
+          node-version: '16.x'
+          registry-url: 'https://registry.npmjs.org'
+          scope: '@lukso'
+          cache: 'npm'
 
       - name: 🔍 Check if version changed
         uses: EndBug/version-check@v1
@@ -44,19 +44,19 @@ jobs:
           echo "APP_VERSION=$APP_VERSION" >> $GITHUB_ENV
       - name: 🧰 Install
         if: env.SHOULD_RELEASE == 'true'
-        run: npm ci
+        run: yarn install --immutable --immutable-cache --check-cache
 
       - name: 🧹 Lint
         if: env.SHOULD_RELEASE == 'true'
-        run: npm run lint
+        run: yarn run lint
 
       - name: 🛠 Build
         if: env.SHOULD_RELEASE == 'true'
-        run: npm run build
+        run: yarn run build
 
       - name: 🎯 Test
         if: env.SHOULD_RELEASE == 'true'
-        run: npm run generate-types && npm run test
+        run: yarn run test
 
       # We assume this will be always triggered by a merge from develop
       # Therefore we tag the previous commit (the merge commit won't be on develop)
@@ -85,13 +85,13 @@ jobs:
         if: env.SHOULD_RELEASE == 'true'
         uses: ncipollo/release-action@v1
         with:
-          bodyFile: "RELEASENOTES.md"
+          bodyFile: 'RELEASENOTES.md'
           token: ${{ secrets.GITHUB_TOKEN }}
           tag: ${{ env.APP_VERSION }}
 
       # Publish to NPM
       - name: Publish
         if: env.SHOULD_RELEASE == 'true'
-        run: npm publish --access public
+        run: yarn publish --access public
         env:
           NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
