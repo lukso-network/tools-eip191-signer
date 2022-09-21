@@ -14,7 +14,7 @@ npm install @lukso/lsp6-signer.js
 ## Setup
 
 ```javascript
-import { LSPFactory } from "@lukso/lsp6-signer.js";
+import { LSPFactory } from '@lukso/lsp6-signer.js';
 
 const lsp6Signer = new LSP6Signer();
 ```
@@ -39,7 +39,7 @@ const signedObject = lsp6Signer.sign(message, signingKey);
 const recoveredAddress = lsp6Signer.recover(
   message,
   signature,
-  isMessagePrefixed
+  isMessagePrefixed,
 );
 ```
 
