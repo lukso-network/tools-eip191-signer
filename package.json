@@ -16,7 +16,10 @@
     "url": "git+https://github.com/lukso-network/tools-lsp6-signer.git"
   },
   "keywords": [],
-  "author": "Magali Morin",
+  "author": {
+    "name": "Magali Morin",
+    "url": "https://github.com/magalimorin18"
+  },
   "license": "ISC",
   "bugs": {
     "url": "https://github.com/lukso-network/tools-lsp6-signer/issues"
