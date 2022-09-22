@@ -1,0 +1,95 @@
+name: Create GitHub release and publish to NPM
+
+on:
+  push:
+    branches:
+      - 'main'
+name: release-please
+jobs:
+  release-please:
+    runs-on: ubuntu-latest
+
+    steps:
+
+      - name: Ensure main branch
+        if: github.ref != 'refs/heads/main'
+        run: |-
+          echo "Not running on main - exit"
+          exit 1
+
+      - uses: google-github-actions/release-please-action@v3
+        id: release
+        with:
+          release-type: node
+          package-name: '@lukso/lsp6-signer.js'
+
+      - uses: actions/checkout@v2
+        # these if statements ensure that a publication only occurs when
+        # a new release is created:
+        if: ${{ steps.release.outputs.release_created }}
+
+      - name: Use Node.js 18.x
+        uses: actions/setup-node@v1
+        with:
+          node-version: 18
+          registry-url: 'https://registry.npmjs.org'
+          scope: '@lukso'
+        if: ${{ steps.release.outputs.release_created }}
+
+      - name: Install
+        run: yarn install --immutable --immutable-cache --check-cache
+        if: ${{ steps.release.outputs.release_created }}
+
+      - name: Lint
+        run: yarn run lint
+        if: ${{ steps.release.outputs.release_created }}
+
+      - name: Build
+        run: yarn run build
+        if: ${{ steps.release.outputs.release_created }}
+
+      - name: Test
+        run: yarn run test
+        if: ${{ steps.release.outputs.release_created }}
+
+      # We assume this will be always triggered by a merge from develop
+      # Therefore we tag the previous commit (the merge commit won't be on develop)
+      # - name: Create and push Git Tag
+      #   run: |-
+      #     git config --global user.email "release@lukso.network"
+      #     git config --global user.name "LUKSO Bot"
+      #     git tag -a ${{ env.APP_VERSION }} HEAD~ -m "Release Version ${{ env.APP_VERSION }} [CI]"
+      #     git push --set-upstream origin tag ${{ env.APP_VERSION }}
+      #   if: ${{ steps.release.outputs.release_created }}
+
+      # Create GitHub Release
+      # - name: Extract release notes from CHANGELOG
+      #   id: extract-release-notes
+      #   uses: ffurrer2/extract-release-notes@v1
+      #   with:
+      #     release_notes_file: RELEASENOTES.md
+      #   if: ${{ steps.release.outputs.release_created }}
+
+      # - name: Add PR body to Release Notes
+      #   env:
+      #     PR_BODY: ${{ steps.findPR.outputs.body }}
+      #   run: |-
+      #     echo ${PR_BODY}|cat - RELEASENOTES.md > /tmp/out && mv /tmp/out RELEASENOTES.md
+      #   if: ${{ steps.release.outputs.release_created }}
+
+      # - name: Create GitHub release
+      #   uses: ncipollo/release-action@v1
+      #   with:
+      #     bodyFile: 'RELEASENOTES.md'
+      #     token: ${{ secrets.GITHUB_TOKEN }}
+      #     tag: ${{ env.APP_VERSION }}
+      #   if: ${{ steps.release.outputs.release_created }}
+
+      # Publish to NPM
+      - name: Publish
+        run: yarn publish --access public
+        env:
+          NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
+        if: ${{ steps.release.outputs.release_created }}
+
+
