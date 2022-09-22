@@ -1,0 +1,70 @@
+name: Create GitHub release and publish to NPM
+
+on:
+  push:
+    branches:
+      - 'main'
+      - 'develop'
+
+jobs:
+  release-please:
+    name: release
+    runs-on: ubuntu-latest
+
+    steps:
+      # - name: Ensure main branch
+      #   if: github.ref != 'refs/heads/main'
+      #   run: |-
+      #     echo "Not running on main - exit"
+      #     exit 1
+
+      - uses: google-github-actions/release-please-action@v3
+        id: release
+        with:
+          release-type: node
+          package-name: '@lukso/lsp6-signer.js'
+          bump-minor-pre-major: true
+
+      - name: 🔍 Check if version changed
+        uses: EndBug/version-check@v1
+        if: github.event_name == 'push'
+        id: check
+
+      - name: 🔄 Check if should release
+        run: echo "SHOULD_RELEASE=${{ steps.check.outputs.changed == 'true' || github.event_name == 'workflow_dispatch' }}" >> $GITHUB_ENV
+
+      - uses: actions/checkout@v2
+        # these if statements ensure that a publication only occurs when
+        # a new release is created:
+        if: env.SHOULD_RELEASE == 'true'
+
+      - name: Use Node.js 16.x
+        if: env.SHOULD_RELEASE == 'true'
+        uses: actions/setup-node@v1
+        with:
+          node-version: 16
+          registry-url: 'https://registry.npmjs.org'
+          scope: '@lukso'
+
+      - name: Install
+        if: env.SHOULD_RELEASE == 'true'
+        run: yarn install --immutable --immutable-cache --check-cache
+
+      - name: Lint
+        if: env.SHOULD_RELEASE == 'true'
+        run: yarn run lint
+
+      - name: Build
+        if: env.SHOULD_RELEASE == 'true'
+        run: yarn run build
+
+      - name: Test
+        if: env.SHOULD_RELEASE == 'true'
+        run: yarn run test
+
+      # Publish to NPM
+      - name: Publish
+        if: env.SHOULD_RELEASE == 'true'
+        run: yarn publish --access public
+        env:
+          NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
