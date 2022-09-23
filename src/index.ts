@@ -45,7 +45,7 @@ export class LSP6Signer {
   recover(
     message: string | Message,
     signature: string,
-    isMessagePrefixed: boolean,
+    isMessagePrefixed = false,
   ): string {
     const args = [].slice.apply([message, signature, isMessagePrefixed]);
 

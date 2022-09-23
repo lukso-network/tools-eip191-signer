@@ -87,7 +87,7 @@ describe('Recover the address function of a transaction', () => {
     });
   });
 
-  it('should recover the wrong signing adress when the message is not prefixed but isMessagePrefixed is set to true', () => {
+  it('should recover the wrong signing adress when the message is not prefixed and isMessagePrefixed is true', () => {
     const lsp6Signer = new LSP6Signer();
     testCases.forEach((data) => {
       const messageData = lsp6Signer.sign(data, signingKey);
@@ -114,6 +114,16 @@ describe('Recover the address function of a transaction', () => {
         signature,
         isMessagePrefixed,
       );
+      expect(recoveredAddress).toBe(signingAddress);
+    });
+  });
+
+  it('should recover the address even if isMessagePrefixed is not specified', () => {
+    const lsp6Signer = new LSP6Signer();
+    testCases.forEach((data) => {
+      const messageData = lsp6Signer.sign(data, signingKey);
+      const signature = messageData.signature;
+      const recoveredAddress = lsp6Signer.recover(messageData, signature);
       expect(recoveredAddress).toBe(signingAddress);
     });
   });
