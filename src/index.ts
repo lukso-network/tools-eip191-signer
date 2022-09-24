@@ -13,7 +13,7 @@ export class LSP6Signer {
       : utils.utf8ToHex(message);
     const messageBytes = utils.hexToBytes(messageHex);
     const messageBuffer = Buffer.from(messageBytes);
-    const preamble = '\x19LSP6 Execute Relay Call:\n' + messageBytes.length;
+    const preamble = '\x19LSP6 ExecuteRelayCall:\n' + messageBytes.length;
     const preambleBuffer = Buffer.from(preamble);
     const ethMessage = Buffer.concat([preambleBuffer, messageBuffer]);
     return bufferToHex(keccak256(ethMessage));
