@@ -31,7 +31,7 @@ describe('Hash message function', () => {
   it('should be prefixed with "\x19LSP6 Execute Relay Call:\n"', () => {
     const hashedMessage = lsp6Signer.hashMessage('Hello World');
     expect(hashedMessage).toBe(
-      '0x90379a0a840499a5e18db4ff7b4d9a56cd009f014a66e3ca86001da3442b7d2c',
+      '0x267dbe91dc4e45f9ab588be314b8f954513a4bcd55015a9380bea074b76dc91f',
     );
   });
 });
