@@ -1,10 +1,8 @@
 ---
-sidebar_position: 1.1
+sidebar_position: 1
 ---
 
 # LSP6Signer
-
-# Usage
 
 ## hashMessage
 
@@ -25,8 +23,8 @@ Hashes the given message. The message will be enveloped as follows: `'\x19LSP6 E
 ### Example
 
 ```javascript
-lsp6Signer.hash('Hello World') >
-  '0x90379a0a840499a5e18db4ff7b4d9a56cd009f014a66e3ca86001da3442b7d2c';
+lsp6Signer.hash('Hello World');
+// '0x90379a0a840499a5e18db4ff7b4d9a56cd009f014a66e3ca86001da3442b7d2c';
 ```
 
 ## sign
@@ -39,9 +37,9 @@ Signs a message. The message passed as parameter will be wrapped as follows: `'\
 
 ### Parameters
 
-`message` - `String`: The message to sign.
+1. `message` - `String`: The message to sign.
 
-`signingKey` - `String`: The private key to sign with.
+2. `signingKey` - `String`: The private key to sign with.
 
 ### Returns
 
@@ -60,7 +58,8 @@ Signs a message. The message passed as parameter will be wrapped as follows: `'\
 lsp6Signer.sign(
   'hello',
   'ffeb17b9a6059fec3bbab63d76b060b7380cac7a62ce6621a134531a46458968',
-) >
+);
+/**
   {
     message: 'hello',
     messageHash:
@@ -71,6 +70,7 @@ lsp6Signer.sign(
     signature:
       '0x1eab2de0103b8e82650f9706b17cf2adce55a335e7041bad5a94ab49c56a9c12662e80a369ffa2a6a77fbeaad1f32653cbd74860c8fbc999b1fc47b8d1cb7d931c',
   };
+*/
 ```
 
 ## recover
@@ -107,7 +107,7 @@ lsp6Signer.recover(
   signature:'0x1eab2de0103b8e82650f9706b17cf2adce55a335e7041bad5a94ab49c56a9c12662e80a369ffa2a6a77fbeaad1f32653cbd74860c8fbc999b1fc47b8d1cb7d931c',
   isMessagePrefixed:false
 )
-> '0x2b389f8EB52D16A105e02165a2AC1450461A237b';
+// '0x2b389f8EB52D16A105e02165a2AC1450461A237b';
 ```
 
 ###
