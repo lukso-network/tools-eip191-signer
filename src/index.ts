@@ -4,7 +4,8 @@
 import Account from 'eth-lib/lib/account';
 import utils from 'web3-utils';
 import { bufferToHex, keccak256 } from 'ethereumjs-util';
-import { Message } from '../src/interfaces';
+
+import { Message } from './interfaces';
 
 export class LSP6Signer {
   hashMessage(message: string) {
