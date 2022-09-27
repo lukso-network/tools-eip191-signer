@@ -4,7 +4,6 @@ on:
   push:
     branches:
       - 'main'
-      - 'develop'
 
 jobs:
   release-please:
@@ -12,11 +11,11 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
-      # - name: Ensure main branch
-      #   if: github.ref != 'refs/heads/main'
-      #   run: |-
-      #     echo "Not running on main - exit"
-      #     exit 1
+      - name: Ensure main branch
+        if: github.ref != 'refs/heads/main'
+        run: |-
+          echo "Not running on main - exit"
+          exit 1
       - uses: actions/checkout@v3
         with:
           fetch-depth: 0
