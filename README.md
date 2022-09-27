@@ -1,49 +1,11 @@
-# lsp6-signer.js &middot; [![GitHub license](https://img.shields.io/badge/license-Apache-blue.svg)](./LICENSE)
+# lsp6-signer.js &middot; [![GitHub license](https://img.shields.io/badge/license-Apache-blue.svg)](./LICENSE) [![npm version](https://img.shields.io/npm/v/@lukso/lsp6-signer.js.svg?style=flat)](https://www.npmjs.com/package/@lukso/lsp6-signer.js) [![PRs Welcome](https://img.shields.io/badge/PRs-welcome-brightgreen.svg)](https://github.com/lukso-network/tools-lsp6-signer/pulls)
 
 <p align="center">
  <h2 align="center"><strong>@lukso/lsp6-signer.js</strong></h2>
  <p align="center">Helper library to sign a transaction
 </p>
 
-## Install
-
-```bash
-npm install @lukso/lsp6-signer.js
-```
-
-## Setup
-
-```javascript
-import { LSPFactory } from '@lukso/lsp6-signer.js';
-
-const lsp6Signer = new LSP6Signer();
-```
-
-## Usage
-
-### Hash a message
-
-```javascript
-const hash = lsp6Signer.hashMessage(message);
-```
-
-### Sign a transaction
-
-```javascript
-const signedObject = lsp6Signer.sign(message, signingKey);
-```
-
-### Recover an adress used to sign a transaction
-
-```javascript
-const recoveredAddress = lsp6Signer.recover(
-  message,
-  signature,
-  isMessagePrefixed,
-);
-```
-
-###
+Import the ./docs getting started file here
 
 ## Contributing
 
