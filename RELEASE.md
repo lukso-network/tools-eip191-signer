@@ -13,7 +13,8 @@ After having merged the release PR into main, release-please takes the following
 
 1. Updates the changelog file (for example `CHANGELOG.md`), along with other language specific files (for example `package.json`).
 2. Tags the commit with the version number.
-3. Creates a npm Release based on the tag.
+3. Creates a GitHub Release based on the tag.
+4. Release the package to npm.
 
 The status label on the PR indicates where the release PR is in its lifecycle :
 
