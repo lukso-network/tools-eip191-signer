@@ -1,4 +1,6 @@
-## Conventional Commits
+# Contributing to lsp6-signer.js
+
+## Commits
 
 You should use [Conventional Commit messages](https://www.conventionalcommits.org/).
 
@@ -24,6 +26,22 @@ Other prefixes are also allowed :
 - `style:` Changes that do not affect the meaning of the code (white-space, formatting, missing semi-colons, etc).
 - `test:` Adding missing tests or correcting existing tests.
 - `chore:` Other
+
+Further details on conventional commits can be found here: <https://www.conventionalcommits.org/en/v1.0.0/>
+
+## Building
+
+```
+npm run build
+```
+
+This will build the library into `/build`.
+
+## Testing
+
+```
+npm test
+```
 
 ## Become a contributor
 
