@@ -11,14 +11,28 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
-      - name: Ensure main branch
-        if: github.ref != 'refs/heads/main'
-        run: |-
-          echo "Not running on main - exit"
-          exit 1
       - uses: actions/checkout@v3
         with:
           fetch-depth: 0
+
+      - name: Use Node.js 16.x
+        uses: actions/setup-node@v1
+        with:
+          node-version: 16
+          registry-url: 'https://registry.npmjs.org'
+          scope: '@lukso'
+
+      - name: 🧰 Install
+        run: yarn install --immutable --immutable-cache --check-cache
+
+      - name: 💅 Lint
+        run: yarn run lint
+
+      - name: 🎯 Test
+        run: yarn run test
+
+      - name: 🛠 Build
+        run: yarn run build
 
       - uses: google-github-actions/release-please-action@v3
         id: release
@@ -34,39 +48,10 @@ jobs:
         id: check
 
       - name: 🔄 Check if should release
-        run: echo "SHOULD_RELEASE=${{ steps.check.outputs.changed == 'true' || github.event_name == 'workflow_dispatch' }}" >> $GITHUB_ENV
-
-      - uses: actions/checkout@v2
-        # these if statements ensure that a publication only occurs when
-        # a new release is created:
-        if: env.SHOULD_RELEASE == 'true'
-
-      - name: Use Node.js 16.x
-        if: env.SHOULD_RELEASE == 'true'
-        uses: actions/setup-node@v1
-        with:
-          node-version: 16
-          registry-url: 'https://registry.npmjs.org'
-          scope: '@lukso'
-
-      - name: Install
-        if: env.SHOULD_RELEASE == 'true'
-        run: yarn install --immutable --immutable-cache --check-cache
-
-      - name: Lint
-        if: env.SHOULD_RELEASE == 'true'
-        run: yarn run lint
-
-      - name: Build
-        if: env.SHOULD_RELEASE == 'true'
-        run: yarn run build
-
-      - name: Test
-        if: env.SHOULD_RELEASE == 'true'
-        run: yarn run test
+        run: echo "SHOULD_RELEASE=${{ steps.check.outputs.changed == 'true' }}" >> $GITHUB_ENV
 
       # Publish to NPM
-      - name: Publish
+      - name: 📦 Publish to NPM
         if: env.SHOULD_RELEASE == 'true'
         run: yarn publish --access public
         env:
