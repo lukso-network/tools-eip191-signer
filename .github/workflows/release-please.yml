@@ -41,6 +41,7 @@ jobs:
           package-name: '@lukso/lsp6-signer.js'
           bump-minor-pre-major: true
           bump-patch-for-minor-pre-major: true
+          default-branch: main
 
       - name: 🔍 Check if version changed
         uses: EndBug/version-check@v1
