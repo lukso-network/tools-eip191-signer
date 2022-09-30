@@ -13,7 +13,7 @@ The `@lukso/lsp6-signer.js` package is used to sign an LSP6 Execute Relay Call t
 
 This library will add the `\x19LSP6 ExecuteRelayCall:\n` prefix to a message and sign it.
 
-The ExcuteRelayCall prefix is used instead of the standard Ethereum transaction prefix to sign messages so that an executeRelayCall transaction cannot be inadvertently signed when signing an Ethereum signed message.
+The `LSP6 ExcuteRelayCall` prefix is used instead of the standard Ethereum transaction prefix to sign messages so that an [`executeRelayCall`](https://docs.lukso.tech/standards/smart-contracts/lsp6-key-manager#executerelaycall) transaction cannot be inadvertently signed when signing an Ethereum signed message.
 
 - [GitHub Repository](https://github.com/lukso-network/tools-lsp6-signer)
 - [NPM Package](https://www.npmjs.com/package/@lukso/lsp6-signer.js)
@@ -34,7 +34,7 @@ const lsp6Signer = new LSP6Signer();
 
 ## Contributing
 
-This project follows the [all-contributors](https://github.com/all-contributors/all-contributors) specification.
+Please check [`CONTRIBUTING.md`](./CONTRIBUTING.md).
 
 ## License
 

@@ -19,17 +19,21 @@ const testCases = [
   'čžíáýùûüÿàâæçéèêëïîôœ',
 ];
 
+const lsp6Signer = new LSP6Signer();
+
 describe('Hash message function', () => {
-  const lsp6Signer = new LSP6Signer();
   it('should be hexadecimal and of 32 bites', () => {
     testCases.forEach((data) => {
       const hash = lsp6Signer.hashMessage(data);
+
       expect(hash.substring(0, 2)).toBe('0x');
       expect(hash.length).toBe(66);
     });
   });
+
   it('should be prefixed with "\x19LSP6 Execute Relay Call:\n"', () => {
     const hashedMessage = lsp6Signer.hashMessage('Hello World');
+
     expect(hashedMessage).toBe(
       '0x267dbe91dc4e45f9ab588be314b8f954513a4bcd55015a9380bea074b76dc91f',
     );
@@ -37,10 +41,9 @@ describe('Hash message function', () => {
 });
 
 describe('Sign transaction function', () => {
-  const lsp6Signer = new LSP6Signer();
   testCases.forEach((data) => {
     const signedObject = lsp6Signer.sign(data, signingKey);
-    it('should give back an object with the right properties', () => {
+    it('should return an object with the expected properties', () => {
       expect(signedObject).toHaveProperty('message');
       expect(signedObject).toHaveProperty('messageHash');
       expect(signedObject).toHaveProperty('v');
@@ -53,7 +56,6 @@ describe('Sign transaction function', () => {
 
 describe('Recover the address function of a transaction', () => {
   it('should recover the signing address when the message is not prefixed', () => {
-    const lsp6Signer = new LSP6Signer();
     testCases.forEach((data) => {
       const messageData = lsp6Signer.sign(data, signingKey);
       const message = messageData.message;
@@ -70,14 +72,15 @@ describe('Recover the address function of a transaction', () => {
     });
   });
 
-  it('should recover the signer address when recovering signed hash', () => {
-    const lsp6Signer = new LSP6Signer();
+  it('should recover the signing address when recovering signed hash', () => {
     testCases.forEach((data) => {
       const messageData = lsp6Signer.sign(data, signingKey);
       const message = messageData.message;
-      const messagePrefixed = lsp6Signer.hashMessage(message);
       const signature = messageData.signature;
+
+      const messagePrefixed = lsp6Signer.hashMessage(message);
       const isMessagePrefixed = true;
+
       const recoveredAddress = lsp6Signer.recover(
         messagePrefixed,
         signature,
@@ -87,24 +90,40 @@ describe('Recover the address function of a transaction', () => {
     });
   });
 
-  it('should not recover the right signing adress when the message is not prefixed and isMessagePrefixed is true', () => {
-    const lsp6Signer = new LSP6Signer();
-    testCases.forEach((data) => {
-      const messageData = lsp6Signer.sign(data, signingKey);
-      const message = messageData.message;
-      const signature = messageData.signature;
-      const isMessagePrefixed = true;
-      const recoveredAddress = lsp6Signer.recover(
-        message,
-        signature,
-        isMessagePrefixed,
-      );
-      expect(recoveredAddress).not.toBe(signingAddress);
-    });
+  it('should not recover the correct signing address when the message is not prefixed and hashed and isMessagePrefixed is true', () => {
+    const messageData = lsp6Signer.sign(
+      'Hello I am a non prefixed message',
+      signingKey,
+    );
+    const message = messageData.message;
+    const signature = messageData.signature;
+    const isMessagePrefixed = true;
+    const recoveredAddress = lsp6Signer.recover(
+      message,
+      signature,
+      isMessagePrefixed,
+    );
+    expect(recoveredAddress).not.toBe(signingAddress);
   });
 
-  it('should recover the address when the message is an object', () => {
-    const lsp6Signer = new LSP6Signer();
+  it('should recover the correct signing address when the message is already prefixed and hashed and isMessagePrefixed is true', () => {
+    const nonPrefixedMessage = 'Hello - I will soon be a prefixed message';
+    const prefixedAndHashedMessage = lsp6Signer.hashMessage(nonPrefixedMessage);
+
+    const messageData = lsp6Signer.sign(nonPrefixedMessage, signingKey);
+    const signature = messageData.signature;
+
+    const isMessagePrefixed = true;
+    const recoveredAddress = lsp6Signer.recover(
+      prefixedAndHashedMessage,
+      signature,
+      isMessagePrefixed,
+    );
+
+    expect(recoveredAddress).toBe(signingAddress);
+  });
+
+  it('should recover the signing address when the message is an object', () => {
     testCases.forEach((data) => {
       const messageData = lsp6Signer.sign(data, signingKey);
       const signature = messageData.signature;
@@ -114,22 +133,22 @@ describe('Recover the address function of a transaction', () => {
         signature,
         isMessagePrefixed,
       );
+
       expect(recoveredAddress).toBe(signingAddress);
     });
   });
 
-  it('should recover the address even if isMessagePrefixed is not specified', () => {
-    const lsp6Signer = new LSP6Signer();
+  it('should recover the signing address even if isMessagePrefixed is not specified', () => {
     testCases.forEach((data) => {
       const messageData = lsp6Signer.sign(data, signingKey);
       const signature = messageData.signature;
       const recoveredAddress = lsp6Signer.recover(messageData, signature);
+
       expect(recoveredAddress).toBe(signingAddress);
     });
   });
 
-  it('should accept both hashed and unhashed message', () => {
-    const lsp6Signer = new LSP6Signer();
+  it('should accept both prefixed + hashed and unhashed message', () => {
     testCases.forEach((rawData) => {
       const hashedData = lsp6Signer.hashMessage(rawData);
 
@@ -146,6 +165,7 @@ describe('Recover the address function of a transaction', () => {
         signature,
         true,
       );
+
       expect(recoveredAddressFromRawData).toBe(recoveredAddressFromHashedData);
     });
   });
