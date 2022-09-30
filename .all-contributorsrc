@@ -1,0 +1,54 @@
+{
+  "projectName": "tools-lsp6-signer",
+  "projectOwner": "Fabian Vogelsteller",
+  "repoType": "github",
+  "repoHost": "https://github.com",
+  "files": [
+    "README.md"
+  ],
+  "imageSize": 50,
+  "commit": false,
+  "commitConvention": "eslint",
+  "contributors": [
+    {
+      "login": "magalimorin18",
+      "name": "Magali Morin",
+      "avatar_url": "https://avatars.githubusercontent.com/u/51906903?v=4",
+      "profile": "https://github.com/magalimorin18",
+      "contributions": [
+        "code",
+        "test"
+      ]
+    },
+    {
+      "login": "frozeman",
+      "name": "Fabian Vogelsteller",
+      "avatar_url": "https://avatars.githubusercontent.com/u/232662?v=4",
+      "profile": "https://lukso.network/",
+      "contributions": [
+        "ideas"
+      ]
+    },
+    {
+      "login": "CallumGrindle",
+      "name": "Callum Grindle",
+      "avatar_url": "https://avatars.githubusercontent.com/u/54543428?v=4",
+      "profile": "https://github.com/CallumGrindle",
+      "contributions": [
+        "review",
+        "mentoring"
+      ]
+    },
+    {
+      "login": "Hugoo",
+      "name": "Hugo Masclet",
+      "avatar_url": "https://avatars.githubusercontent.com/u/477945?v=4",
+      "profile": "http://www.hugomasclet.com/",
+      "contributions": [
+        "review",
+        "mentoring"
+      ]
+    }
+  ],
+  "contributorsPerLine": 7
+}

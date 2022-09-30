@@ -1,0 +1,26 @@
+name: Lint, Test, Build
+
+on:
+  pull_request:
+    branches:
+      - '*'
+
+jobs:
+  build-lint-test:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout 🛎️
+        uses: actions/checkout@v3
+
+      - name: Install
+        run: yarn install --immutable --immutable-cache --check-cache
+
+      - name: Lint
+        run: yarn run lint
+
+      - name: Build
+        run: yarn run build
+
+      - name: Test
+        run: yarn run test

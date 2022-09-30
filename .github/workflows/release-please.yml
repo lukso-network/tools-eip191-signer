@@ -1,0 +1,58 @@
+name: Create GitHub release and publish to NPM
+
+on:
+  push:
+    branches:
+      - 'main'
+
+jobs:
+  release-please:
+    name: release
+    runs-on: ubuntu-latest
+
+    steps:
+      - uses: actions/checkout@v3
+        with:
+          fetch-depth: 0
+
+      - name: Use Node.js 16.x
+        uses: actions/setup-node@v1
+        with:
+          node-version: 16
+          registry-url: 'https://registry.npmjs.org'
+          scope: '@lukso'
+
+      - name: 🧰 Install
+        run: yarn install --immutable --immutable-cache --check-cache
+
+      - name: 💅 Lint
+        run: yarn run lint
+
+      - name: 🎯 Test
+        run: yarn run test
+
+      - name: 🛠 Build
+        run: yarn run build
+
+      - uses: google-github-actions/release-please-action@v3
+        id: release
+        with:
+          release-type: node
+          package-name: '@lukso/lsp6-signer.js'
+          bump-minor-pre-major: true
+          bump-patch-for-minor-pre-major: true
+
+      - name: 🔍 Check if version changed
+        uses: EndBug/version-check@v1
+        if: github.event_name == 'push'
+        id: check
+
+      - name: 🔄 Check if should release
+        run: echo "SHOULD_RELEASE=${{ steps.check.outputs.changed == 'true' }}" >> $GITHUB_ENV
+
+      # Publish to NPM
+      - name: 📦 Publish to NPM
+        if: env.SHOULD_RELEASE == 'true'
+        run: yarn publish --access public
+        env:
+          NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
