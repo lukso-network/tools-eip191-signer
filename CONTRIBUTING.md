@@ -40,7 +40,7 @@ This will build the library into `/build`.
 ## Testing
 
 ```
-npm test
+yarn test
 ```
 
 ## Become a contributor
