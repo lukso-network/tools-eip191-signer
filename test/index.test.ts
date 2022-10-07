@@ -31,11 +31,11 @@ describe('Hash message function', () => {
     });
   });
 
-  it('should be prefixed with "\x19LSP6 Execute Relay Call:\n"', () => {
+  it('should be prefixed with "\x19Execute Relay Call:\n"', () => {
     const hashedMessage = lsp6Signer.hashMessage('Hello World');
 
     expect(hashedMessage).toBe(
-      '0x267dbe91dc4e45f9ab588be314b8f954513a4bcd55015a9380bea074b76dc91f',
+      '0x677739c1b99336b0c40ed12a4d77c68805f8b5ca2d865676de85bf83b3b664ee',
     );
   });
 });
