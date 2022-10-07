@@ -1,6 +1,6 @@
 {
   "name": "@lukso/lsp6-signer.js",
-  "version": "0.0.2-development",
+  "version": "0.1.0",
   "description": "Helper Library to allows to sign an LSP6 `executeRelayCall()` calldata",
   "main": "build/main/src/index.js",
   "typings": "build/main/src/index.d.ts",
