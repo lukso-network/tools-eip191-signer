@@ -7,7 +7,7 @@ import { bufferToHex, keccak256 } from 'ethereumjs-util';
 
 import { Message } from './interfaces';
 
-export class LSP6Signer {
+export class EIP191Signer {
   hashMessage(message: string) {
     const messageHex = utils.isHexStrict(message)
       ? message
@@ -19,8 +19,10 @@ export class LSP6Signer {
     const ethMessage = Buffer.concat([preambleBuffer, messageBuffer]);
     return bufferToHex(keccak256(ethMessage));
   }
-
-  sign(message: string, privateKey: string): Message {
+ 
+  
+ // TODO fix
+  signEthereumMessage(message: string, privateKey: string): Message {
     if (!privateKey.startsWith('0x')) {
       privateKey = '0x' + privateKey;
     }
@@ -31,6 +33,31 @@ export class LSP6Signer {
     }
 
     const hash = this.hashMessage(message);
+    const signature = Account.sign(hash, privateKey);
+    const vrs = Account.decodeSignature(signature);
+    return {
+      message: message,
+      messageHash: hash,
+      v: vrs[0],
+      r: vrs[1],
+      s: vrs[2],
+      signature: signature,
+    };
+  }
+
+ 
+ // TODO fix
+  signValidatorMessage(validator: string, data: string, privateKey: string): Message {
+    if (!privateKey.startsWith('0x')) {
+      privateKey = '0x' + privateKey;
+    }
+
+    // 64 hex characters + hex-prefix
+    if (privateKey.length !== 66) {
+      throw new Error('Private key must be 32 bytes long');
+    }
+
+    const hash = this.hashMessage(data);
     const signature = Account.sign(hash, privateKey);
     const vrs = Account.decodeSignature(signature);
     return {
