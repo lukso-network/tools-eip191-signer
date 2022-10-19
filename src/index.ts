@@ -14,21 +14,31 @@ export class EIP191Signer {
       : utils.utf8ToHex(message);
     const messageBytes = utils.hexToBytes(messageHex);
     const messageBuffer = Buffer.from(messageBytes);
-    const preamble = '\x19Ethereum Signed Message:\n' + messageBytes.length;
+   
+    const preamble = '\x19' + '\0x45' + 'thereum Signed Message:\n' + messageBytes.length;
     const preambleBuffer = Buffer.from(preamble);
     const ethMessage = Buffer.concat([preambleBuffer, messageBuffer]);
     return bufferToHex(keccak256(ethMessage));
   }
  
-  hashValidatorData(message: string) {
-    const messageHex = utils.isHexStrict(message)
-      ? message
-      : utils.utf8ToHex(message);
-    const messageBytes = utils.hexToBytes(messageHex);
-    const messageBuffer = Buffer.from(messageBytes);
-    const preamble = '\x19Ethereum Signed Message:\n' + messageBytes.length;
-    const preambleBuffer = Buffer.from(preamble);
-    const ethMessage = Buffer.concat([preambleBuffer, messageBuffer]);
+  hashValidatorData(validator: string, data: string) {
+    // validator address
+    const validatorHex = utils.isAddress(validator)
+      ? validator
+      : throw Error('Validator needs to be a valid address');
+    const validatorBuffer = Buffer.from(utils.hexToBytes(validatorHex));
+   
+    // data to sign
+    const dataHex = utils.isHexStrict(data)
+      ? data
+      : utils.utf8ToHex(data);
+    const dataBuffer = Buffer.from(utils.hexToBytes(dataHex));
+    
+    // concatenate it
+    const preambleBuffer = Buffer.from('\x19');
+    const versionBuffer = Buffer.from('\0x00');
+    const ethMessage = Buffer.concat([preambleBuffer, versionBuffer, validatorBuffer, dataBuffer]);
+   
     return bufferToHex(keccak256(ethMessage));
   }
  
@@ -56,8 +66,7 @@ export class EIP191Signer {
     };
   }
 
- 
- // TODO fix
+
   signValidatorData(validator: string, data: string, privateKey: string): Message {
     if (!privateKey.startsWith('0x')) {
       privateKey = '0x' + privateKey;
@@ -68,7 +77,7 @@ export class EIP191Signer {
       throw new Error('Private key must be 32 bytes long');
     }
 
-    const hash = this.hashValidatorData(data);
+    const hash = this.hashValidatorData(validator, data);
     const signature = Account.sign(hash, privateKey);
     const vrs = Account.decodeSignature(signature);
     return {
@@ -83,34 +92,17 @@ export class EIP191Signer {
 
   recover(
     message: string | Message,
-    signature: string,
-    isMessagePrefixed = false,
+    signature: string
   ): string {
-    const args = [].slice.apply([message, signature, isMessagePrefixed]);
+    const args = [].slice.apply([message, signature]);
 
     if (!!message && typeof message === 'object') {
       return this.recover(
         message.messageHash,
-        Account.encodeSignature([message.v, message.r, message.s]),
-        true,
+        Account.encodeSignature([message.v, message.r, message.s])
       );
     }
 
-    if (!isMessagePrefixed) {
-      message = this.hashMessage(message as string);
-    }
-
-    if (args.length >= 4) {
-      isMessagePrefixed = args.slice(-1)[0];
-      isMessagePrefixed =
-        typeof isMessagePrefixed === 'boolean' ? !!isMessagePrefixed : false;
-
-      return this.recover(
-        message,
-        Account.encodeSignature(args.slice(1, 4)),
-        isMessagePrefixed,
-      );
-    }
     return Account.recover(message, signature);
   }
 }
