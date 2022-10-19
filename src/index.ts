@@ -8,20 +8,31 @@ import { bufferToHex, keccak256 } from 'ethereumjs-util';
 import { Message } from './interfaces';
 
 export class EIP191Signer {
-  hashMessage(message: string) {
+  hashEthereumMessage(message: string) {
     const messageHex = utils.isHexStrict(message)
       ? message
       : utils.utf8ToHex(message);
     const messageBytes = utils.hexToBytes(messageHex);
     const messageBuffer = Buffer.from(messageBytes);
-    const preamble = '\x19Execute Relay Call:\n' + messageBytes.length;
+    const preamble = '\x19Ethereum Signed Message:\n' + messageBytes.length;
+    const preambleBuffer = Buffer.from(preamble);
+    const ethMessage = Buffer.concat([preambleBuffer, messageBuffer]);
+    return bufferToHex(keccak256(ethMessage));
+  }
+ 
+  hashValidatorData(message: string) {
+    const messageHex = utils.isHexStrict(message)
+      ? message
+      : utils.utf8ToHex(message);
+    const messageBytes = utils.hexToBytes(messageHex);
+    const messageBuffer = Buffer.from(messageBytes);
+    const preamble = '\x19Ethereum Signed Message:\n' + messageBytes.length;
     const preambleBuffer = Buffer.from(preamble);
     const ethMessage = Buffer.concat([preambleBuffer, messageBuffer]);
     return bufferToHex(keccak256(ethMessage));
   }
  
   
- // TODO fix
   signEthereumMessage(message: string, privateKey: string): Message {
     if (!privateKey.startsWith('0x')) {
       privateKey = '0x' + privateKey;
@@ -32,7 +43,7 @@ export class EIP191Signer {
       throw new Error('Private key must be 32 bytes long');
     }
 
-    const hash = this.hashMessage(message);
+    const hash = this.hashEthereumMessage(message);
     const signature = Account.sign(hash, privateKey);
     const vrs = Account.decodeSignature(signature);
     return {
@@ -47,7 +58,7 @@ export class EIP191Signer {
 
  
  // TODO fix
-  signValidatorMessage(validator: string, data: string, privateKey: string): Message {
+  signValidatorData(validator: string, data: string, privateKey: string): Message {
     if (!privateKey.startsWith('0x')) {
       privateKey = '0x' + privateKey;
     }
@@ -57,7 +68,7 @@ export class EIP191Signer {
       throw new Error('Private key must be 32 bytes long');
     }
 
-    const hash = this.hashMessage(data);
+    const hash = this.hashValidatorData(data);
     const signature = Account.sign(hash, privateKey);
     const vrs = Account.decodeSignature(signature);
     return {
