@@ -5,6 +5,8 @@ const signingKey =
 
 const signingAddress = '0x2b389f8EB52D16A105e02165a2AC1450461A237b';
 
+const validatorAddress = '0xAd278a6eAd89f6B6c6Fdf54A3E6E876660593b45';
+
 const testCases = [
   'Hello World',
   '',
@@ -21,30 +23,76 @@ const testCases = [
 
 const eip191Signer = new EIP191Signer();
 
-describe('Hash message function', () => {
+describe('function hashEthereumSignedMessage', () => {
   it('should be hexadecimal and of 32 bites', () => {
     testCases.forEach((data) => {
-      const hash = eip191Signer.hashEthereumSignedMessage(data);
+      const hashedData = eip191Signer.hashEthereumSignedMessage(data);
 
-      expect(hash.substring(0, 2)).toBe('0x');
-      expect(hash.length).toBe(66);
+      expect(hashedData.substring(0, 2)).toBe('0x');
+      expect(hashedData.length).toBe(66);
     });
   });
 
-  it('should be prefixed with "\x19Execute Relay Call:\n"', () => {
+  it('should be prefixed with "\x19\x45thereum Signed Message:\n"', () => {
     const hashedMessage = eip191Signer.hashEthereumSignedMessage('Hello World');
 
     expect(hashedMessage).toBe(
-      '0x677739c1b99336b0c40ed12a4d77c68805f8b5ca2d865676de85bf83b3b664ee',
+      '0xa1de988600a42c4b4ab089b619297c17d53cffae5d5120d82d8a92d0bb3b78f2',
     );
   });
 });
 
-describe('Sign ethereum signed message function', () => {
-  testCases.forEach((data) => {
-    const signedObject = eip191Signer.signEthereumSignedMessage(data, signingKey);
+describe('function hashDataWithIntendedValidator', () => {
+  it('should be hexadecimal and of 32 bites', () => {
+    testCases.forEach((data) => {
+      const hashedData = eip191Signer.hashDataWithIntendedValidator(
+        validatorAddress,
+        data,
+      );
 
-    it('should return an object with the expected properties', () => {
+      expect(hashedData.substring(0, 2)).toBe('0x');
+      expect(hashedData.length).toBe(66);
+    });
+  });
+
+  it('should be prefixed with "\x19\x000xAd278a6eAd89f6B6c6Fdf54A3E6E876660593b45"', () => {
+    const hashedMessage = eip191Signer.hashDataWithIntendedValidator(
+      validatorAddress,
+      'Hello World',
+    );
+
+    expect(hashedMessage).toBe(
+      '0xa63022286ecaa3317625e319a64b3bf01c41da558dfc1890e8cb196eb414ffd5',
+    );
+  });
+
+  it("should throw Error with message 'Validator needs to be a valid address' when validator's address is invalid", () => {
+    testCases.forEach((data) => {
+      const invalidValidatorAddress =
+        '0xC1912fEE45d61C87Cc5EA59DaE31190FFFFf232d';
+
+      function functionValidator() {
+        eip191Signer.hashDataWithIntendedValidator(
+          invalidValidatorAddress,
+          data,
+        );
+      }
+
+      expect(functionValidator).toThrow(
+        new Error('Validator needs to be a valid address'),
+      );
+    });
+  });
+});
+
+describe('function signEthereumSignedMessage', () => {
+  it('should return an object with the expected properties', () => {
+    testCases.forEach((data) => {
+      const signedObject = eip191Signer.signEthereumSignedMessage(
+        data,
+        signingKey,
+      );
+
       expect(signedObject).toHaveProperty('message');
       expect(signedObject).toHaveProperty('messageHash');
       expect(signedObject).toHaveProperty('v');
@@ -53,15 +101,59 @@ describe('Sign ethereum signed message function', () => {
       expect(signedObject).toHaveProperty('signature');
     });
   });
+
+  it('should sign correctly "Hello World"', () => {
+    const signedObject = eip191Signer.signEthereumSignedMessage(
+      'Hello World',
+      signingKey,
+    );
+
+    expect(signedObject.signature).toBe(
+      '0x85c15865f2909897c1be6d66c1d9c86d6125978aec9e28d1a69d4d306bde694f7cf9723f0eeaf8815e3fa984ac1d7bf3c420786ead91abd4dd9c1657897efec11c',
+    );
+  });
 });
 
-describe('Recover the address function of an ethereum signed message', () => {
-  it('should recover the signing address when the message is not prefixed', () => {
+describe('function signDataWithIntendedValidator', () => {
+  it('should return an object with the expected properties', () => {
     testCases.forEach((data) => {
-      const messageData = eip191Signer.signEthereumSignedMessage(data, signingKey);
-      const message = messageData.message;
+      const signedObject = eip191Signer.signDataWithIntendedValidator(
+        validatorAddress,
+        data,
+        signingKey,
+      );
+
+      expect(signedObject).toHaveProperty('message');
+      expect(signedObject).toHaveProperty('messageHash');
+      expect(signedObject).toHaveProperty('v');
+      expect(signedObject).toHaveProperty('r');
+      expect(signedObject).toHaveProperty('s');
+      expect(signedObject).toHaveProperty('signature');
+    });
+  });
+  it('should sign correctly "Hello World"', () => {
+    const signedObject = eip191Signer.signDataWithIntendedValidator(
+      validatorAddress,
+      'Hello World',
+      signingKey,
+    );
+
+    expect(signedObject.signature).toBe(
+      '0xa7572d888a22711e180df23cf0d11748fcc0c08c0178cd88aecd1ce47b01c26469d4a87cefb20495ed07a76b4f0e4f553e32fb6333b6a325a442aae249b703181b',
+    );
+  });
+});
+
+describe('Recover the address of a signed EthereumSignedMessage', () => {
+  it('should recover the signing address', () => {
+    testCases.forEach((data) => {
+      const messageData = eip191Signer.signEthereumSignedMessage(
+        data,
+        signingKey,
+      );
+      const hasedMessage = messageData.messageHash;
       const signature = messageData.signature;
-      const recoveredAddress = eip191Signer.recover(message, signature);
+      const recoveredAddress = eip191Signer.recover(hasedMessage, signature);
 
       expect(recoveredAddress).toBe(signingAddress);
       expect(recoveredAddress.substring(0, 2)).toBe('0x');
@@ -69,101 +161,49 @@ describe('Recover the address function of an ethereum signed message', () => {
     });
   });
 
-  it('should recover the signing address when recovering signed hash', () => {
-    testCases.forEach((data) => {
-      const messageData = eip191Signer.signEthereumSignedMessage(data, signingKey);
-      const message = messageData.message;
-      const signature = messageData.signature;
-
-      const messagePrefixed = eip191Signer.signEthereumSignedMessage(message);
-      const isMessagePrefixed = true;
-
-      const recoveredAddress = eip191Signer.recover(
-        messagePrefixed,
-        signature,
-        isMessagePrefixed,
-      );
-      expect(recoveredAddress).toBe(signingAddress);
-    });
-  });
-
-  it('should not recover the correct signing address when the message is not prefixed and hashed and isMessagePrefixed is true', () => {
-    const messageData = eip191Signer.signEthereumSignedMessage(
-      'Hello I am a non prefixed message',
-      signingKey,
-    );
-    const message = messageData.message;
-    const signature = messageData.signature;
-    const isMessagePrefixed = true;
-    const recoveredAddress = eip191Signer.recover(
-      message,
-      signature,
-      isMessagePrefixed,
-    );
-    expect(recoveredAddress).not.toBe(signingAddress);
-  });
-
-  it('should recover the correct signing address when the message is already prefixed and hashed and isMessagePrefixed is true', () => {
-    const nonPrefixedMessage = 'Hello - I will soon be a prefixed message';
-    const prefixedAndHashedMessage = eip191Signer.hashEthereumSignedMessage(nonPrefixedMessage);
-
-    const messageData = eip191Signer.signEthereumSignedMessage(nonPrefixedMessage, signingKey);
-    const signature = messageData.signature;
-
-    const isMessagePrefixed = true;
-    const recoveredAddress = eip191Signer.recover(
-      prefixedAndHashedMessage,
-      signature,
-      isMessagePrefixed,
-    );
-
-    expect(recoveredAddress).toBe(signingAddress);
-  });
-
   it('should recover the signing address when the message is an object', () => {
     testCases.forEach((data) => {
-      const messageData = eip191Signer.signEthereumSignedMessage(data, signingKey);
-      const signature = messageData.signature;
-      const isMessagePrefixed = true;
-      const recoveredAddress = eip191Signer.recover(
-        messageData,
-        signature,
-        isMessagePrefixed,
+      const messageData = eip191Signer.signEthereumSignedMessage(
+        data,
+        signingKey,
       );
-
-      expect(recoveredAddress).toBe(signingAddress);
-    });
-  });
-
-  it('should recover the signing address even if isMessagePrefixed is not specified', () => {
-    testCases.forEach((data) => {
-      const messageData = eip191Signer.signEthereumSignedMessage(data, signingKey);
       const signature = messageData.signature;
       const recoveredAddress = eip191Signer.recover(messageData, signature);
 
       expect(recoveredAddress).toBe(signingAddress);
     });
   });
+});
 
-  it('should accept both prefixed + hashed and unhashed message', () => {
-    testCases.forEach((rawData) => {
-      const hashedData = eip191Signer.hashEthereumSignedMessage(rawData);
-
-      const messageData = eip191Signer.signEthereumSignedMessage(rawData, signingKey);
+describe(' Recover the address of a signed DataWithIntendedValidator', () => {
+  it('should recover the signing address', () => {
+    testCases.forEach((data) => {
+      const messageData = eip191Signer.signDataWithIntendedValidator(
+        validatorAddress,
+        data,
+        signingKey,
+      );
+      const hasedMessage = messageData.messageHash;
       const signature = messageData.signature;
+      const recoveredAddress = eip191Signer.recover(hasedMessage, signature);
 
-      const recoveredAddressFromRawData = eip191Signer.recover(
-        rawData,
-        signature,
-        false,
-      );
-      const recoveredAddressFromHashedData = eip191Signer.recover(
-        hashedData,
-        signature,
-        true,
-      );
+      expect(recoveredAddress).toBe(signingAddress);
+      expect(recoveredAddress.substring(0, 2)).toBe('0x');
+      expect(recoveredAddress.length).toBe(42);
+    });
+  });
 
-      expect(recoveredAddressFromRawData).toBe(recoveredAddressFromHashedData);
+  it('should recover the signing address when the message is an object', () => {
+    testCases.forEach((data) => {
+      const messageData = eip191Signer.signDataWithIntendedValidator(
+        validatorAddress,
+        data,
+        signingKey,
+      );
+      const signature = messageData.signature;
+      const recoveredAddress = eip191Signer.recover(messageData, signature);
+
+      expect(recoveredAddress).toBe(signingAddress);
     });
   });
 });
