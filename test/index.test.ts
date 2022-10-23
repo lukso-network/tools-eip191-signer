@@ -1,3 +1,5 @@
+import utils from 'web3-utils';
+
 import { EIP191Signer } from '../src/index';
 
 const signingKey =
@@ -28,7 +30,7 @@ describe('function hashEthereumSignedMessage', () => {
     testCases.forEach((data) => {
       const hashedData = eip191Signer.hashEthereumSignedMessage(data);
 
-      expect(hashedData.substring(0, 2)).toBe('0x');
+      expect(utils.isHexStrict(hashedData)).toBeTruthy();
       expect(hashedData.length).toBe(66);
     });
   });
@@ -50,7 +52,7 @@ describe('function hashDataWithIntendedValidator', () => {
         data,
       );
 
-      expect(hashedData.substring(0, 2)).toBe('0x');
+      expect(utils.isHexStrict(hashedData)).toBeTruthy();
       expect(hashedData.length).toBe(66);
     });
   });
@@ -156,7 +158,7 @@ describe('Recover the address of a signed EthereumSignedMessage', () => {
       const recoveredAddress = eip191Signer.recover(hasedMessage, signature);
 
       expect(recoveredAddress).toBe(signingAddress);
-      expect(recoveredAddress.substring(0, 2)).toBe('0x');
+      expect(utils.isHexStrict(recoveredAddress)).toBeTruthy();
       expect(recoveredAddress.length).toBe(42);
     });
   });
@@ -188,7 +190,7 @@ describe(' Recover the address of a signed DataWithIntendedValidator', () => {
       const recoveredAddress = eip191Signer.recover(hasedMessage, signature);
 
       expect(recoveredAddress).toBe(signingAddress);
-      expect(recoveredAddress.substring(0, 2)).toBe('0x');
+      expect(utils.isHexStrict(recoveredAddress)).toBeTruthy();
       expect(recoveredAddress.length).toBe(42);
     });
   });
