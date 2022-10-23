@@ -15,12 +15,12 @@ The following format is used to sign data :
 0x19 <1 byte version> <version specific data> <data to sign>
 ```
 
-In the case of an Ethereum Signed Message :
+In the case of an Ethereum Signed Message:
 
 - 1 byte version = `0x45`
 - version specific data = `thereum Signed Message:\n + len(message)`
 
-In the case of data intended to validator :
+In the case of data with intended validator:
 
 - 1 byte version = `0x00`
 - version specific data = validatorAddress

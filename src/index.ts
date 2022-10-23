@@ -94,8 +94,6 @@ export class EIP191Signer {
   }
 
   recover(message: string | Message, signature: string): string {
-    // const args = [].slice.apply([message, signature]);
-
     if (!!message && typeof message === 'object') {
       return this.recover(
         message.messageHash,
