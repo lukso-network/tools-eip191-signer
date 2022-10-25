@@ -93,13 +93,13 @@ export class EIP191Signer {
     };
   }
 
-  recover(message: string | Message, signature: string): string {
-    if (!!message && typeof message === 'object') {
+  recover(messageHash: string | Message, signature: string): string {
+    if (!!messageHash && typeof messageHash === 'object') {
       return this.recover(
-        message.messageHash,
-        Account.encodeSignature([message.v, message.r, message.s]),
+        messageHash.messageHash,
+        Account.encodeSignature([messageHash.v, messageHash.r, messageHash.s]),
       );
     }
-    return Account.recover(message, signature);
+    return Account.recover(messageHash, signature);
   }
 }
