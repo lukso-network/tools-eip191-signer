@@ -71,7 +71,7 @@ Signs a message. The message passed as parameter will be wrapped as follows: `'\
 ## recover
 
 ```javascript
-eip191Signer.recover(message, signature);
+eip191Signer.recover(messageHash, signature);
 ```
 
 Recovers the address which was used to sign the given message.
