@@ -7,20 +7,43 @@ import { bufferToHex, keccak256 } from 'ethereumjs-util';
 
 import { Message } from './interfaces';
 
-export class LSP6Signer {
-  hashMessage(message: string) {
+export class EIP191Signer {
+  hashEthereumSignedMessage(message: string) {
     const messageHex = utils.isHexStrict(message)
       ? message
       : utils.utf8ToHex(message);
     const messageBytes = utils.hexToBytes(messageHex);
     const messageBuffer = Buffer.from(messageBytes);
-    const preamble = '\x19Execute Relay Call:\n' + messageBytes.length;
+    const preamble =
+      '\x19' + '\x45' + 'thereum Signed Message:\n' + messageBytes.length;
     const preambleBuffer = Buffer.from(preamble);
     const ethMessage = Buffer.concat([preambleBuffer, messageBuffer]);
     return bufferToHex(keccak256(ethMessage));
   }
 
-  sign(message: string, privateKey: string): Message {
+  hashDataWithIntendedValidator(validatorAddress: string, data: string) {
+    // validator address
+    if (!utils.isAddress(validatorAddress))
+      throw new Error('Validator needs to be a valid address');
+
+    const validatorBuffer = Buffer.from(utils.hexToBytes(validatorAddress));
+    // data to sign
+    const dataHex = utils.isHexStrict(data) ? data : utils.utf8ToHex(data);
+    const dataBuffer = Buffer.from(utils.hexToBytes(dataHex));
+
+    // concatenate it
+    const preambleBuffer = Buffer.from('\x19');
+    const versionBuffer = Buffer.from('\x00');
+    const ethMessage = Buffer.concat([
+      preambleBuffer,
+      versionBuffer,
+      validatorBuffer,
+      dataBuffer,
+    ]);
+    return bufferToHex(keccak256(ethMessage));
+  }
+
+  signEthereumSignedMessage(message: string, privateKey: string): Message {
     if (!privateKey.startsWith('0x')) {
       privateKey = '0x' + privateKey;
     }
@@ -30,7 +53,7 @@ export class LSP6Signer {
       throw new Error('Private key must be 32 bytes long');
     }
 
-    const hash = this.hashMessage(message);
+    const hash = this.hashEthereumSignedMessage(message);
     const signature = Account.sign(hash, privateKey);
     const vrs = Account.decodeSignature(signature);
     return {
@@ -43,36 +66,40 @@ export class LSP6Signer {
     };
   }
 
-  recover(
-    message: string | Message,
-    signature: string,
-    isMessagePrefixed = false,
-  ): string {
-    const args = [].slice.apply([message, signature, isMessagePrefixed]);
+  signDataWithIntendedValidator(
+    validatorAddress: string,
+    data: string,
+    privateKey: string,
+  ): Message {
+    if (!privateKey.startsWith('0x')) {
+      privateKey = '0x' + privateKey;
+    }
 
-    if (!!message && typeof message === 'object') {
+    // 64 hex characters + hex-prefix
+    if (privateKey.length !== 66) {
+      throw new Error('Private key must be 32 bytes long');
+    }
+    const hash = this.hashDataWithIntendedValidator(validatorAddress, data);
+    const signature = Account.sign(hash, privateKey);
+    const vrs = Account.decodeSignature(signature);
+
+    return {
+      message: data,
+      messageHash: hash,
+      v: vrs[0],
+      r: vrs[1],
+      s: vrs[2],
+      signature: signature,
+    };
+  }
+
+  recover(messageHash: string | Message, signature: string): string {
+    if (!!messageHash && typeof messageHash === 'object') {
       return this.recover(
-        message.messageHash,
-        Account.encodeSignature([message.v, message.r, message.s]),
-        true,
+        messageHash.messageHash,
+        Account.encodeSignature([messageHash.v, messageHash.r, messageHash.s]),
       );
     }
-
-    if (!isMessagePrefixed) {
-      message = this.hashMessage(message as string);
-    }
-
-    if (args.length >= 4) {
-      isMessagePrefixed = args.slice(-1)[0];
-      isMessagePrefixed =
-        typeof isMessagePrefixed === 'boolean' ? !!isMessagePrefixed : false;
-
-      return this.recover(
-        message,
-        Account.encodeSignature(args.slice(1, 4)),
-        isMessagePrefixed,
-      );
-    }
-    return Account.recover(message, signature);
+    return Account.recover(messageHash, signature);
   }
 }

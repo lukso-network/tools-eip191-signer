@@ -1,11 +1,11 @@
-# lsp6-signer.js &middot; [![GitHub license](https://img.shields.io/badge/license-Apache-blue.svg)](./LICENSE) [![npm version](https://img.shields.io/npm/v/@lukso/lsp6-signer.js.svg?style=flat)](https://www.npmjs.com/package/@lukso/lsp6-signer.js) [![PRs Welcome](https://img.shields.io/badge/PRs-welcome-brightgreen.svg)](https://github.com/lukso-network/tools-lsp6-signer/pulls)
+# eip191-signer.js &middot; [![GitHub license](https://img.shields.io/badge/license-Apache-blue.svg)](./LICENSE) [![npm version](https://img.shields.io/npm/v/@lukso/lsp6-signer.js.svg?style=flat)](https://www.npmjs.com/package/@lukso/lsp6-signer.js) [![PRs Welcome](https://img.shields.io/badge/PRs-welcome-brightgreen.svg)](https://github.com/lukso-network/tools-lsp6-signer/pulls)
 
 <p align="center">
- <h2 align="center"><strong>@lukso/lsp6-signer.js</strong></h2>
- <p align="center">Helper library to sign a transaction
+ <h2 align="center"><strong>@lukso/eip191-signer.js</strong></h2>
+ <p align="center">Helper library to sign any <a href="https://eips.ethereum.org/EIPS/eip-191"> EIP191</a> data.
 </p>
 
-<p align="center">For more information see <a href="https://docs.lukso.tech/tools/lsp6-signerjs/getting-started">Documentation</a>.</p>
+<p align="center">For more information see <a href="https://docs.lukso.tech/tools/eip191-signerjs/getting-started">Documentation</a>.</p>
 
 # Getting Started
 
@@ -21,16 +21,60 @@ The `LSP6 ExcuteRelayCall` prefix is used instead of the standard Ethereum trans
 ## Install
 
 ```bash
-npm install @lukso/lsp6-signer.js
+npm install @lukso/eip191-signer.js
 ```
 
-## Setup
+## Usage
 
 ```javascript
-import { LSP6Signer } from '@lukso/lsp6-signer.js';
+import { EIP191Signer } from '@lukso/eip191-signer.js';
 
-const lsp6Signer = new LSP6Signer();
+const eip191Signer = new EIP191Signer();
 ```
+
+## hashEthereumSignedMessage
+
+```javascript
+eip191Signer.hashEthereumSignedMessage(message);
+```
+
+Hashes the given message. The message will be enveloped as follows: `'\x19' + '\x45' + 'thereum Signed Message:\n' + messageBytes.length + message` and hashed using keccak256.
+
+## hashDataWithIntendedValidator
+
+```javascript
+eip191Signer.hashDataWithIntendedValidator(validatorAddress, message);
+```
+
+Hashes the given message. The message will be enveloped as follows: `'\x19' + '\x00' + validatorAddress + message` and hashed using keccak256.
+
+## signEthereumSignedMessage
+
+```javascript
+eip191Signer.signEthereumSignedMessage(message, signingKey);
+```
+
+Signs a message. The message passed as parameter will be wrapped as follows: `'\x19' + '\x45' + 'thereum Signed Message:\n' + messageBytes.length + message`.
+
+## signDataWithIntendedValidator
+
+```javascript
+eip191Signer.signDataWithIntendedValidator(
+  validatorAddress,
+  message,
+  signingKey,
+);
+```
+
+Signs a message. The message passed as parameter will be wrapped as follows: `'\x19' + '\x00' + validatorAddress + message`.
+
+## recover
+
+```javascript
+eip191Signer.recover(messageHash, signature);
+```
+
+Recovers the address which was used to sign the given message.
 
 ## Contributing
 
@@ -38,7 +82,7 @@ Please check [`CONTRIBUTING.md`](./CONTRIBUTING.md).
 
 ## License
 
-lsp6-signer.js is [Apache 2.0 licensed](./LICENSE).
+eip191-signer.js is [Apache 2.0 licensed](./LICENSE).
 
 ## Contributors
 

@@ -38,7 +38,7 @@ jobs:
         id: release
         with:
           release-type: node
-          package-name: '@lukso/lsp6-signer.js'
+          package-name: '@lukso/eip191-signer.js'
           bump-minor-pre-major: true
           default-branch: main
 
