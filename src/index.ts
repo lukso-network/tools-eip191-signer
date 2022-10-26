@@ -2,8 +2,8 @@
  This file contains functions to sign message for executeRelayCall.
 */
 import Account from 'eth-lib/lib/account';
-import utils from 'web3-utils';
 import { bufferToHex, keccak256 } from 'ethereumjs-util';
+import utils from 'web3-utils';
 
 import { Message } from './interfaces';
 
