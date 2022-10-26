@@ -1,5 +1,17 @@
 # Changelog
 
+## [0.1.0](https://github.com/lukso-network/tools-lsp6-signer/compare/v0.0.2-development...v0.1.0) (2022-10-07)
+
+
+### Bug Fixes
+
+* adapt code to prefix '\x19Execute Relay Call:\n' ([dcb8674](https://github.com/lukso-network/tools-lsp6-signer/commit/dcb86741974f3437b13ae2fdd95d13118ca290be))
+
+
+### Miscellaneous Chores
+
+* release 0.1.0 ([2bd42a6](https://github.com/lukso-network/tools-lsp6-signer/commit/2bd42a6ec50f978c5855b7fb9a4e46440d99466d))
+
 ## [0.0.2-development](https://github.com/lukso-network/tools-lsp6-signer/compare/v0.0.1-development...v0.0.2-development) (2022-09-30)
 
 
