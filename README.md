@@ -1,4 +1,4 @@
-# eip191-signer.js &middot; [![GitHub license](https://img.shields.io/badge/license-Apache-blue.svg)](./LICENSE) [![npm version](https://img.shields.io/npm/v/@lukso/lsp6-signer.js.svg?style=flat)](https://www.npmjs.com/package/@lukso/lsp6-signer.js) [![PRs Welcome](https://img.shields.io/badge/PRs-welcome-brightgreen.svg)](https://github.com/lukso-network/tools-lsp6-signer/pulls)
+# eip191-signer.js &middot; [![GitHub license](https://img.shields.io/badge/license-Apache-blue.svg)](./LICENSE) [![npm version](https://img.shields.io/npm/v/@lukso/lsp6-signer.js.svg?style=flat)](https://www.npmjs.com/package/@lukso/eip191-signer.js) [![PRs Welcome](https://img.shields.io/badge/PRs-welcome-brightgreen.svg)](https://github.com/lukso-network/tools-lsp6-signer/pulls)
 
 <p align="center">
  <h2 align="center"><strong>@lukso/eip191-signer.js</strong></h2>
@@ -16,7 +16,7 @@ This library will add the `\x19Execute Relay Call:\n` prefix to a message and si
 The `LSP6 ExcuteRelayCall` prefix is used instead of the standard Ethereum transaction prefix to sign messages so that an [`executeRelayCall`](https://docs.lukso.tech/standards/smart-contracts/lsp6-key-manager#executerelaycall) transaction cannot be inadvertently signed when signing an Ethereum signed message.
 
 - [GitHub Repository](https://github.com/lukso-network/tools-lsp6-signer)
-- [NPM Package](https://www.npmjs.com/package/@lukso/lsp6-signer.js)
+- [NPM Package](https://www.npmjs.com/package/@lukso/eip191-signer.js)
 
 ## Install
 
