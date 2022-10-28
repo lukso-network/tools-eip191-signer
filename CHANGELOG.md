@@ -1,5 +1,17 @@
 # Changelog
 
+## [0.2.1](https://github.com/lukso-network/tools-eip191-signer/compare/v0.2.0...v0.2.1) (2022-10-28)
+
+
+### Features
+
+* add eslint import rules ([36f6981](https://github.com/lukso-network/tools-eip191-signer/commit/36f698192a9abfba398fe4defdfe66ef0d2cc884))
+
+
+### Bug Fixes
+
+* update README ([f26910e](https://github.com/lukso-network/tools-eip191-signer/commit/f26910e2015d188dd22a28c942a6692fbda1b71c))
+
 ## [0.2.0](https://github.com/lukso-network/tools-eip191-signer/compare/v0.1.0...v0.2.0) (2022-10-26)
 
 
