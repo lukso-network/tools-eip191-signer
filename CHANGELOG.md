@@ -1,5 +1,20 @@
 # Changelog
 
+## [0.2.0](https://github.com/lukso-network/tools-eip191-signer/compare/v0.1.0...v0.2.0) (2022-10-26)
+
+
+### Bug Fixes
+
+* change package name ([cb2c3ef](https://github.com/lukso-network/tools-eip191-signer/commit/cb2c3efe95cd6728d76fefd3090720fb8f78b1b6))
+* improve test ([83a0781](https://github.com/lukso-network/tools-eip191-signer/commit/83a0781a9f2e3bc454f15525d4ea63abc26c19d8))
+* refactor code and add test ([e2b6fdb](https://github.com/lukso-network/tools-eip191-signer/commit/e2b6fdb57f7eb08d944dea1540199598e7356a8c))
+* update docs and variable name for clarity ([64ff1ce](https://github.com/lukso-network/tools-eip191-signer/commit/64ff1ce1dcc6e6065d25540241bfc4abf3d51df6))
+
+
+### Miscellaneous Chores
+
+* release 0.2.0 ([6697005](https://github.com/lukso-network/tools-eip191-signer/commit/6697005d10f40ccf341898d3f05839f6b1899151))
+
 ## [0.1.0](https://github.com/lukso-network/tools-lsp6-signer/compare/v0.0.2-development...v0.1.0) (2022-10-07)
 
 
