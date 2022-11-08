@@ -1,6 +1,6 @@
 {
-  "projectName": "tools-lsp6-signer",
-  "projectOwner": "Fabian Vogelsteller",
+  "projectName": "tools-eip191-signer",
+  "projectOwner": "lukso-network",
   "repoType": "github",
   "repoHost": "https://github.com",
   "files": [
