@@ -1,4 +1,4 @@
-# eip191-signer.js &middot; [![GitHub license](https://img.shields.io/badge/license-Apache-blue.svg)](./LICENSE) [![npm version](https://img.shields.io/npm/v/@lukso/lsp6-signer.js.svg?style=flat)](https://www.npmjs.com/package/@lukso/eip191-signer.js) [![PRs Welcome](https://img.shields.io/badge/PRs-welcome-brightgreen.svg)](https://github.com/lukso-network/tools-lsp6-signer/pulls)
+# eip191-signer.js &middot; [![GitHub license](https://img.shields.io/badge/license-Apache-blue.svg)](./LICENSE) [![npm version](https://img.shields.io/npm/v/@lukso/eip191-signer.js.svg?style=flat)](https://www.npmjs.com/package/@lukso/eip191-signer.js) [![PRs Welcome](https://img.shields.io/badge/PRs-welcome-brightgreen.svg)](https://github.com/lukso-network/tools-eip191-signer/pulls)
 
 <p align="center">
  <h2 align="center"><strong>@lukso/eip191-signer.js</strong></h2>
@@ -9,13 +9,13 @@
 
 # Getting Started
 
-The `@lukso/lsp6-signer.js` package is used to sign an LSP6 Execute Relay Call transaction.
+The `@lukso/eip191-signer.js` package is used to sign an EIP191 Execute Relay Call transaction.
 
 This library will add the `\x19Execute Relay Call:\n` prefix to a message and sign it.
 
-The `LSP6 ExcuteRelayCall` prefix is used instead of the standard Ethereum transaction prefix to sign messages so that an [`executeRelayCall`](https://docs.lukso.tech/standards/smart-contracts/lsp6-key-manager#executerelaycall) transaction cannot be inadvertently signed when signing an Ethereum signed message.
+The `EIP191 ExcuteRelayCall` prefix is used instead of the standard Ethereum transaction prefix to sign messages so that an [`executeRelayCall`](https://docs.lukso.tech/standards/smart-contracts/eip191-key-manager#executerelaycall) transaction cannot be inadvertently signed when signing an Ethereum signed message.
 
-- [GitHub Repository](https://github.com/lukso-network/tools-lsp6-signer)
+- [GitHub Repository](https://github.com/lukso-network/tools-eip191-signer)
 - [NPM Package](https://www.npmjs.com/package/@lukso/eip191-signer.js)
 
 ## Install
@@ -92,10 +92,10 @@ eip191-signer.js is [Apache 2.0 licensed](./LICENSE).
 <table>
   <tbody>
     <tr>
-      <td align="center"><a href="https://github.com/magalimorin18"><img src="https://avatars.githubusercontent.com/u/51906903?v=4?s=50" width="50px;" alt="Magali Morin"/><br /><sub><b>Magali Morin</b></sub></a><br /><a href="https://github.com/Fabian Vogelsteller/tools-lsp6-signer/commits?author=magalimorin18" title="Code">💻</a> <a href="https://github.com/Fabian Vogelsteller/tools-lsp6-signer/commits?author=magalimorin18" title="Tests">⚠️</a></td>
+      <td align="center"><a href="https://github.com/magalimorin18"><img src="https://avatars.githubusercontent.com/u/51906903?v=4?s=50" width="50px;" alt="Magali Morin"/><br /><sub><b>Magali Morin</b></sub></a><br /><a href="https://github.com/lukso-network/tools-eip191-signer/commits?author=magalimorin18" title="Code">💻</a> <a href="https://github.com/lukso-network/tools-eip191-signer/commits?author=magalimorin18" title="Tests">⚠️</a></td>
       <td align="center"><a href="https://lukso.network/"><img src="https://avatars.githubusercontent.com/u/232662?v=4?s=50" width="50px;" alt="Fabian Vogelsteller"/><br /><sub><b>Fabian Vogelsteller</b></sub></a><br /><a href="#ideas-frozeman" title="Ideas, Planning, & Feedback">🤔</a></td>
-      <td align="center"><a href="https://github.com/CallumGrindle"><img src="https://avatars.githubusercontent.com/u/54543428?v=4?s=50" width="50px;" alt="Callum Grindle"/><br /><sub><b>Callum Grindle</b></sub></a><br /><a href="https://github.com/Fabian Vogelsteller/tools-lsp6-signer/pulls?q=is%3Apr+reviewed-by%3ACallumGrindle" title="Reviewed Pull Requests">👀</a> <a href="#mentoring-CallumGrindle" title="Mentoring">🧑‍🏫</a></td>
-      <td align="center"><a href="http://www.hugomasclet.com/"><img src="https://avatars.githubusercontent.com/u/477945?v=4?s=50" width="50px;" alt="Hugo Masclet"/><br /><sub><b>Hugo Masclet</b></sub></a><br /><a href="https://github.com/Fabian Vogelsteller/tools-lsp6-signer/pulls?q=is%3Apr+reviewed-by%3AHugoo" title="Reviewed Pull Requests">👀</a> <a href="#mentoring-Hugoo" title="Mentoring">🧑‍🏫</a></td>
+      <td align="center"><a href="https://github.com/CallumGrindle"><img src="https://avatars.githubusercontent.com/u/54543428?v=4?s=50" width="50px;" alt="Callum Grindle"/><br /><sub><b>Callum Grindle</b></sub></a><br /><a href="https://github.com/lukso-network/tools-eip191-signer/pulls?q=is%3Apr+reviewed-by%3ACallumGrindle" title="Reviewed Pull Requests">👀</a> <a href="#mentoring-CallumGrindle" title="Mentoring">🧑‍🏫</a></td>
+      <td align="center"><a href="http://www.hugomasclet.com/"><img src="https://avatars.githubusercontent.com/u/477945?v=4?s=50" width="50px;" alt="Hugo Masclet"/><br /><sub><b>Hugo Masclet</b></sub></a><br /><a href="https://github.com/lukso-network/tools-eip191-signer/pulls?q=is%3Apr+reviewed-by%3AHugoo" title="Reviewed Pull Requests">👀</a> <a href="#mentoring-Hugoo" title="Mentoring">🧑‍🏫</a></td>
     </tr>
   </tbody>
 </table>
