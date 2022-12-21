@@ -21,9 +21,9 @@
   },
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/lukso-network/tools-lsp6-signer.git"
+    "url": "git+https://github.com/lukso-network/tools-eip191-signer.git"
   },
-  "keywords": [],
+  "keywords": ["web3", "lukso","eip191" ],
   "author": {
     "name": "Magali Morin",
     "url": "https://github.com/magalimorin18"
@@ -36,9 +36,9 @@
     }
   ],
   "bugs": {
-    "url": "https://github.com/lukso-network/tools-lsp6-signer/issues"
+    "url": "https://github.com/lukso-network/tools-eip191-signer/issues"
   },
-  "homepage": "https://github.com/lukso-network/tools-lsp6-signer#readme",
+  "homepage": "https://github.com/lukso-network/tools-eip191-signer#readme",
   "devDependencies": {
     "@types/jest": "^29.0.3",
     "@types/node": "^18.7.18",

@@ -1,4 +1,4 @@
-# Contributing to lsp6-signer.js
+# Contributing to eip191-signer.js
 
 ## Commits
 
