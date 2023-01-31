@@ -1,6 +1,6 @@
 {
   "name": "@lukso/eip191-signer.js",
-  "version": "0.2.1",
+  "version": "0.2.2",
   "description": "Helper Library to allows to sign any EIP191 data",
   "main": "build/main/src/index.js",
   "typings": "build/main/src/index.d.ts",
@@ -23,7 +23,11 @@
     "type": "git",
     "url": "git+https://github.com/lukso-network/tools-eip191-signer.git"
   },
-  "keywords": ["web3", "lukso","eip191" ],
+  "keywords": [
+    "web3",
+    "lukso",
+    "eip191"
+  ],
   "author": {
     "name": "Magali Morin",
     "url": "https://github.com/magalimorin18"
