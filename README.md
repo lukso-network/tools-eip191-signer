@@ -9,11 +9,11 @@
 
 # Getting Started
 
-The `@lukso/eip191-signer.js` package is used to sign an EIP191 Execute Relay Call transaction.
+The `@lukso/eip191-signer.js` package is used to sign messages according to the [EIP191 standard](https://eips.ethereum.org/EIPS/eip-191).
 
-This library will add the `\x19Execute Relay Call:\n` prefix to a message and sign it.
+If you want to sign with the version **0x45**, then use the function **signEthereumSignedMessage**.
 
-The `EIP191 ExcuteRelayCall` prefix is used instead of the standard Ethereum transaction prefix to sign messages so that an [`executeRelayCall`](https://docs.lukso.tech/standards/smart-contracts/lsp6-key-manager#executerelaycall) transaction cannot be inadvertently signed when signing an Ethereum signed message.
+If you want to sign with the version **0x00**, then use the function **signDataWithIntendedValidator**.
 
 - [GitHub Repository](https://github.com/lukso-network/tools-eip191-signer)
 - [NPM Package](https://www.npmjs.com/package/@lukso/eip191-signer.js)
@@ -38,7 +38,9 @@ const eip191Signer = new EIP191Signer();
 eip191Signer.hashEthereumSignedMessage(message);
 ```
 
-Hashes the given message. The message will be enveloped as follows: `'\x19' + '\x45' + 'thereum Signed Message:\n' + messageBytes.length + message` and hashed using keccak256.
+Hashes the given message with the version 0x45.
+
+The message will be enveloped as follows: `'\x19' + '\x45' + 'thereum Signed Message:\n' + messageBytes.length + message` and hashed using keccak256.
 
 ## hashDataWithIntendedValidator
 
@@ -46,7 +48,9 @@ Hashes the given message. The message will be enveloped as follows: `'\x19' + '\
 eip191Signer.hashDataWithIntendedValidator(validatorAddress, message);
 ```
 
-Hashes the given message. The message will be enveloped as follows: `'\x19' + '\x00' + validatorAddress + message` and hashed using keccak256.
+Hashes the given message with the version 0x00.
+
+The message will be enveloped as follows: `'\x19' + '\x00' + validatorAddress + message` and hashed using keccak256.
 
 ## signEthereumSignedMessage
 
@@ -54,7 +58,9 @@ Hashes the given message. The message will be enveloped as follows: `'\x19' + '\
 eip191Signer.signEthereumSignedMessage(message, signingKey);
 ```
 
-Signs a message. The message passed as parameter will be wrapped as follows: `'\x19' + '\x45' + 'thereum Signed Message:\n' + messageBytes.length + message`.
+This method is for signing a message with the version 0x45.
+
+The message passed as parameter will be wrapped as follows: `'\x19' + '\x45' + 'thereum Signed Message:\n' + messageBytes.length + message`.
 
 ## signDataWithIntendedValidator
 
@@ -66,7 +72,9 @@ eip191Signer.signDataWithIntendedValidator(
 );
 ```
 
-Signs a message. The message passed as parameter will be wrapped as follows: `'\x19' + '\x00' + validatorAddress + message`.
+This method is for signing a message with the version 0x00.
+
+The message passed as parameter will be wrapped as follows: `'\x19' + '\x00' + validatorAddress + message`.
 
 ## recover
 
