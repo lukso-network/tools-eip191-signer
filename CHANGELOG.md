@@ -1,5 +1,12 @@
 # Changelog
 
+## [0.2.2](https://github.com/lukso-network/tools-eip191-signer/compare/v0.2.1...v0.2.2) (2023-01-31)
+
+
+### Documentation
+
+* update links in docs ([80eac41](https://github.com/lukso-network/tools-eip191-signer/commit/80eac4160b0e26dd868b8edb302b7655c265953b))
+
 ## [0.2.1](https://github.com/lukso-network/tools-eip191-signer/compare/v0.2.0...v0.2.1) (2022-10-28)
 
 ### Features
