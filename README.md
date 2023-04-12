@@ -32,6 +32,59 @@ import { EIP191Signer } from '@lukso/eip191-signer.js';
 const eip191Signer = new EIP191Signer();
 ```
 
+### Example: signing a LSP6KeyManager relay transaction
+
+The [LSP6-KeyManager](https://docs.lukso.tech/standards/universal-profile/lsp6-key-manager#relay-execution) standard uses version 0 for signed messages. Therefore, it must use [`signDataWithIntendedValidator`](#signdatawithintendedvalidator).
+
+```js
+// Web3.js Example
+
+const chainId = await web3.eth.getChainId(); 
+
+let encodedMessage = web3.utils.encodePacked(
+  { value: LSP6_VERSION, type: 'uint256' }, // LSP6_VERSION = 6;
+  { value: chainId, type: 'uint256' },
+  { value: nonce, type: 'uint256' },
+  { value: msgValue, type: 'uint256' },
+  { value: abiPayload, type: 'bytes' },
+);
+
+let eip191Signer = new EIP191Signer();
+
+let { signature } = await eip191Signer.signDataWithIntendedValidator(
+  keyManagerAddress, // intended validator is the address of the Key Manager
+  encodedMessage,    //  
+  controllerPrivateKey,
+);
+```
+
+```js
+// ethers.js Example
+
+const network = await provider.getNetwork(); 
+
+const chainId = network.chainId;
+
+let encodedMessage = ethers.utils.solidityPack(
+     ["uint256", "uint256", "uint256", "uint256", "bytes"],
+     [
+        LSP6_VERSION, // LSP6_VERSION = 6;
+        chainId,
+        nonce,
+        msgValue,
+        abiPayload
+     ]
+   );
+
+let eip191Signer = new EIP191Signer();
+
+let { signature } = await eip191Signer.signDataWithIntendedValidator(
+  keyManagerAddress, // intended validator is the address of the Key Manager
+  encodedMessage,    //  
+  controllerPrivateKey,
+);
+```
+
 ## hashEthereumSignedMessage
 
 ```javascript
