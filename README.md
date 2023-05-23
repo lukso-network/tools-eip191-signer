@@ -41,10 +41,14 @@ The [LSP6-KeyManager](https://docs.lukso.tech/standards/universal-profile/lsp6-k
 
 const chainId = await web3.eth.getChainId(); 
 
+// Indicate that the signature is always valid
+const validityTimestamp = 0;
+
 let encodedMessage = web3.utils.encodePacked(
   { value: LSP6_VERSION, type: 'uint256' }, // LSP6_VERSION = 6;
   { value: chainId, type: 'uint256' },
   { value: nonce, type: 'uint256' },
+  { value: validityTimestamp, type: 'uint256' },
   { value: msgValue, type: 'uint256' },
   { value: abiPayload, type: 'bytes' },
 );
@@ -65,12 +69,22 @@ const network = await provider.getNetwork();
 
 const chainId = network.chainId;
 
+// The block.timestamp(s) which the signature is valid in between
+const startingTimestamp = ....;
+const endingTimestamp = ....;
+
+const validityTimestamp = ethers.utils.hexConcat([
+    ethers.utils.zeroPad(ethers.utils.hexlify(startingTimestamp), 16),
+    ethers.utils.zeroPad(ethers.utils.hexlify(endingTimestamp), 16),
+  ]);
+
 let encodedMessage = ethers.utils.solidityPack(
-     ["uint256", "uint256", "uint256", "uint256", "bytes"],
+     ["uint256", "uint256", "uint256", "uint256", "uint256", "bytes"],
      [
         LSP6_VERSION, // LSP6_VERSION = 6;
         chainId,
         nonce,
+        validityTimestamp
         msgValue,
         abiPayload
      ]
