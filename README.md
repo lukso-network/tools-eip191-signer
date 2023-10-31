@@ -45,7 +45,7 @@ const chainId = await web3.eth.getChainId();
 const validityTimestamp = 0;
 
 let encodedMessage = web3.utils.encodePacked(
-  { value: LSP6_VERSION, type: 'uint256' }, // LSP6_VERSION = 6;
+  { value: LSP25_VERSION, type: 'uint256' }, // //LSP25 Version = 25;
   { value: chainId, type: 'uint256' },
   { value: nonce, type: 'uint256' },
   { value: validityTimestamp, type: 'uint256' },
@@ -81,7 +81,7 @@ const validityTimestamp = ethers.utils.hexConcat([
 let encodedMessage = ethers.utils.solidityPack(
      ["uint256", "uint256", "uint256", "uint256", "uint256", "bytes"],
      [
-        LSP6_VERSION, // LSP6_VERSION = 6;
+        LSP25_VERSION, // LSP25_VERSION = 25;
         chainId,
         nonce,
         validityTimestamp
