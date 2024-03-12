@@ -3,16 +3,15 @@
 */
 import Account from 'eth-lib/lib/account';
 import { bufferToHex, keccak256 } from 'ethereumjs-util';
-import utils from 'web3-utils';
+import { hexToBytes, utf8ToHex } from 'web3-utils';
+import { isAddress, isHexStrict } from 'web3-validator';
 
 import { Message } from './interfaces';
 
 export class EIP191Signer {
   hashEthereumSignedMessage(message: string) {
-    const messageHex = utils.isHexStrict(message)
-      ? message
-      : utils.utf8ToHex(message);
-    const messageBytes = utils.hexToBytes(messageHex);
+    const messageHex = isHexStrict(message) ? message : utf8ToHex(message);
+    const messageBytes = hexToBytes(messageHex);
     const messageBuffer = Buffer.from(messageBytes);
     const preamble =
       '\x19' + '\x45' + 'thereum Signed Message:\n' + messageBytes.length;
@@ -23,13 +22,13 @@ export class EIP191Signer {
 
   hashDataWithIntendedValidator(validatorAddress: string, data: string) {
     // validator address
-    if (!utils.isAddress(validatorAddress))
+    if (!isAddress(validatorAddress))
       throw new Error('Validator needs to be a valid address');
 
-    const validatorBuffer = Buffer.from(utils.hexToBytes(validatorAddress));
+    const validatorBuffer = Buffer.from(hexToBytes(validatorAddress));
     // data to sign
-    const dataHex = utils.isHexStrict(data) ? data : utils.utf8ToHex(data);
-    const dataBuffer = Buffer.from(utils.hexToBytes(dataHex));
+    const dataHex = isHexStrict(data) ? data : utf8ToHex(data);
+    const dataBuffer = Buffer.from(hexToBytes(dataHex));
 
     // concatenate it
     const preambleBuffer = Buffer.from('\x19');
