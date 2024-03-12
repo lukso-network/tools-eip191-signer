@@ -70,6 +70,6 @@
     "eth-lib": "^0.1.29",
     "ethereumjs-account": "^3.0.0",
     "ethereumjs-util": "^7.1.5",
-    "web3-utils": "1.10.3"
+    "web3-utils": "^4.2.1"
   }
 }
