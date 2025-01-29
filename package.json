@@ -23,7 +23,11 @@
     "type": "git",
     "url": "git+https://github.com/lukso-network/tools-eip191-signer.git"
   },
-  "keywords": ["web3", "lukso","eip191" ],
+  "keywords": [
+    "web3",
+    "lukso",
+    "eip191"
+  ],
   "author": {
     "name": "Magali Morin",
     "url": "https://github.com/magalimorin18"
@@ -48,14 +52,14 @@
     "esbuild": "^0.15.7",
     "esbuild-jest-transform": "^1.1.0",
     "eslint": "^8.23.1",
-    "eslint-config-prettier": "^8.3.0",
+    "eslint-config-prettier": "^8.5.0",
     "eslint-plugin-eslint-comments": "^3.2.0",
     "eslint-plugin-import": "^2.26.0",
     "eslint-plugin-jest": "^27.0.4",
-    "eslint-plugin-prettier": "^4.0.0",
-    "jest": "^29.0.2",
+    "eslint-plugin-prettier": "^4.2.1",
+    "jest": "^29.0.3",
     "npm-run-all": "^4.1.5",
-    "prettier": "^2.3.2",
+    "prettier": "^2.7.1",
     "release-please": "^14.7.0",
     "ts-jest": "^29.0.1",
     "ts-node": "^10.9.1",
@@ -66,6 +70,6 @@
     "eth-lib": "^0.1.29",
     "ethereumjs-account": "^3.0.0",
     "ethereumjs-util": "^7.1.5",
-    "web3-utils": "^1.7.5"
+    "web3-utils": "1.10.3"
   }
 }
