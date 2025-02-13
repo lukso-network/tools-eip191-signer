@@ -3,21 +3,26 @@
 */
 import {
   type Address,
+  type ByteArray,
   hexToBytes,
   isAddress,
+  isBytes,
   isHex,
   keccak256,
   recoverAddress,
   serializeSignature,
-  stringToHex,
+  stringToBytes,
 } from 'viem';
 import { sign } from 'viem/accounts';
 
 import type { Message } from './interfaces';
 export class EIP191Signer {
-  hashEthereumSignedMessage(message) {
-    const messageHex = isHex(message) ? message : stringToHex(message);
-    const messageBytes = hexToBytes(messageHex);
+  hashEthereumSignedMessage(message: string | ByteArray): `0x${string}` {
+    const messageBytes = isBytes(message)
+      ? message
+      : isHex(message)
+      ? hexToBytes(message)
+      : stringToBytes(message);
     const encoder = new TextEncoder();
     const preambleBytes = encoder.encode(
       `\x19\x45thereum Signed Message:\n${messageBytes.length}`,
@@ -29,24 +34,30 @@ export class EIP191Signer {
     ethMessage.set(messageBytes, preambleBytes.length); // Add the string bytes after
     return keccak256(ethMessage, 'hex');
   }
-  hashDataWithIntendedValidator(validatorAddress, data) {
+  hashDataWithIntendedValidator(
+    validatorAddress: Address,
+    data: string | ByteArray,
+  ) {
     // validator address
     if (!isAddress(validatorAddress)) {
       throw new Error('Validator needs to be a valid address');
     }
-    const validatorBuffer = hexToBytes(validatorAddress);
+    const validatorBytes = hexToBytes(validatorAddress);
     // data to sign
-    const dataHex = isHex(data) ? data : stringToHex(data);
-    const dataBuffer = hexToBytes(dataHex);
+    const dataBytes = isBytes(data)
+      ? data
+      : isHex(data)
+      ? hexToBytes(data)
+      : stringToBytes(data);
     // concatenate it
     const encoder = new TextEncoder();
-    const preambleBuffer = encoder.encode('\x19\x00');
+    const preambleBytes = encoder.encode('\x19\x00');
     const ethMessage = new Uint8Array(
-      preambleBuffer.length + validatorBuffer.length + dataBuffer.length,
+      preambleBytes.length + validatorBytes.length + dataBytes.length,
     );
-    ethMessage.set(preambleBuffer, 0); // Add the byte array starting at index 0
-    ethMessage.set(validatorBuffer, preambleBuffer.length); // Add the string bytes after
-    ethMessage.set(dataBuffer, preambleBuffer.length + validatorBuffer.length); // Add the string bytes after
+    ethMessage.set(preambleBytes, 0); // Add the byte array starting at index 0
+    ethMessage.set(validatorBytes, preambleBytes.length); // Add the string bytes after
+    ethMessage.set(dataBytes, preambleBytes.length + validatorBytes.length); // Add the string bytes after
     return keccak256(ethMessage, 'hex');
   }
 
@@ -66,8 +77,8 @@ export class EIP191Signer {
   }
 
   async signDataWithIntendedValidator(
-    validatorAddress: string,
-    data: string,
+    validatorAddress: Address,
+    data: string | ByteArray,
     privateKey: `0x${string}`,
   ): Promise<Message> {
     const hash = this.hashDataWithIntendedValidator(validatorAddress, data);

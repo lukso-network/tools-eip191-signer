@@ -1,5 +1,7 @@
+import type { ByteArray } from 'viem';
+
 export interface Message {
-  message: string;
+  message: string | ByteArray;
   messageHash: `0x${string}`;
   v: bigint;
   r: `0x${string}`;
