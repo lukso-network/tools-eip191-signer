@@ -20,7 +20,7 @@ export class EIP191Signer {
   hashEthereumSignedMessage(message: string | ByteArray): `0x${string}` {
     const messageBytes = isBytes(message)
       ? message
-      : isHex(message)
+      : isHex(message, { strict: true })
       ? hexToBytes(message)
       : stringToBytes(message);
     const encoder = new TextEncoder();
@@ -46,7 +46,7 @@ export class EIP191Signer {
     // data to sign
     const dataBytes = isBytes(data)
       ? data
-      : isHex(data)
+      : isHex(data, { strict: true })
       ? hexToBytes(data)
       : stringToBytes(data);
     // concatenate it
