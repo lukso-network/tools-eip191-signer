@@ -32,6 +32,73 @@ import { EIP191Signer } from '@lukso/eip191-signer.js';
 const eip191Signer = new EIP191Signer();
 ```
 
+### Example: signing a LSP6KeyManager relay transaction
+
+The [LSP6-KeyManager](https://docs.lukso.tech/standards/universal-profile/lsp6-key-manager#relay-execution) standard uses version 0 for signed messages. Therefore, it must use [`signDataWithIntendedValidator`](#signdatawithintendedvalidator).
+
+```js
+// Web3.js Example
+
+const chainId = await web3.eth.getChainId(); 
+
+// Indicate that the signature is always valid
+const validityTimestamp = 0;
+
+let encodedMessage = web3.utils.encodePacked(
+  { value: LSP25_VERSION, type: 'uint256' }, // //LSP25 Version = 25;
+  { value: chainId, type: 'uint256' },
+  { value: nonce, type: 'uint256' },
+  { value: validityTimestamp, type: 'uint256' },
+  { value: msgValue, type: 'uint256' },
+  { value: abiPayload, type: 'bytes' },
+);
+
+let eip191Signer = new EIP191Signer();
+
+let { signature } = await eip191Signer.signDataWithIntendedValidator(
+  keyManagerAddress, // intended validator is the address of the Key Manager
+  encodedMessage,    //  
+  controllerPrivateKey,
+);
+```
+
+```js
+// ethers.js Example
+
+const network = await provider.getNetwork(); 
+
+const chainId = network.chainId;
+
+// The block.timestamp(s) which the signature is valid in between
+const startingTimestamp = ....;
+const endingTimestamp = ....;
+
+const validityTimestamp = ethers.utils.hexConcat([
+    ethers.utils.zeroPad(ethers.utils.hexlify(startingTimestamp), 16),
+    ethers.utils.zeroPad(ethers.utils.hexlify(endingTimestamp), 16),
+  ]);
+
+let encodedMessage = ethers.utils.solidityPack(
+     ["uint256", "uint256", "uint256", "uint256", "uint256", "bytes"],
+     [
+        LSP25_VERSION, // LSP25_VERSION = 25;
+        chainId,
+        nonce,
+        validityTimestamp
+        msgValue,
+        abiPayload
+     ]
+   );
+
+let eip191Signer = new EIP191Signer();
+
+let { signature } = await eip191Signer.signDataWithIntendedValidator(
+  keyManagerAddress, // intended validator is the address of the Key Manager
+  encodedMessage,    //  
+  controllerPrivateKey,
+);
+```
+
 ## hashEthereumSignedMessage
 
 ```javascript

@@ -1,13 +1,9 @@
 module.exports = async () => {
   return {
     roots: ['<rootDir>'],
+    preset: 'ts-jest',
     transform: {
-      '^.+\\.tsx?$': [
-        'esbuild-jest-transform',
-        {
-          sourcemap: true,
-        },
-      ],
+      '^.+\\.tsx?$': 'ts-jest',
     },
     collectCoverageFrom: ['src/**/*.ts'],
     coveragePathIgnorePatterns: [
