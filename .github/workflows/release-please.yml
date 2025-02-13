@@ -23,7 +23,7 @@ jobs:
           scope: '@lukso'
 
       - name: 🧰 Install
-        run: yarn install --immutable --immutable-cache --check-cache
+        run: yarn install --immutable
 
       - name: 💅 Lint
         run: yarn run lint
