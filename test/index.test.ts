@@ -1,4 +1,4 @@
-import utils from 'web3-utils';
+import { isHexStrict } from 'web3-validator';
 
 import { EIP191Signer } from '../src/index';
 
@@ -27,12 +27,12 @@ const eip191Signer = new EIP191Signer();
 
 describe('function hashEthereumSignedMessage', () => {
   it('should be hexadecimal and of 32 bites', () => {
-    testCases.forEach((data) => {
+    for (const data of testCases) {
       const hashedData = eip191Signer.hashEthereumSignedMessage(data);
 
-      expect(utils.isHexStrict(hashedData)).toBeTruthy();
+      expect(isHexStrict(hashedData)).toBeTruthy();
       expect(hashedData.length).toBe(66);
-    });
+    }
   });
 
   it('should be prefixed with "\x19\x45thereum Signed Message:\n"', () => {
@@ -46,15 +46,15 @@ describe('function hashEthereumSignedMessage', () => {
 
 describe('function hashDataWithIntendedValidator', () => {
   it('should be hexadecimal and of 32 bites', () => {
-    testCases.forEach((data) => {
+    for (const data of testCases) {
       const hashedData = eip191Signer.hashDataWithIntendedValidator(
         validatorAddress,
         data,
       );
 
-      expect(utils.isHexStrict(hashedData)).toBeTruthy();
+      expect(isHexStrict(hashedData)).toBeTruthy();
       expect(hashedData.length).toBe(66);
-    });
+    }
   });
 
   it('should be prefixed with "\x19\x000xAd278a6eAd89f6B6c6Fdf54A3E6E876660593b45"', () => {
@@ -69,27 +69,22 @@ describe('function hashDataWithIntendedValidator', () => {
   });
 
   it("should throw Error with message 'Validator needs to be a valid address' when validator's address is invalid", () => {
-    testCases.forEach((data) => {
+    for (const data of testCases) {
       const invalidValidatorAddress =
         '0xC1912fEE45d61C87Cc5EA59DaE31190FFFFf232d';
-
-      function functionValidator() {
+      expect(() => {
         eip191Signer.hashDataWithIntendedValidator(
           invalidValidatorAddress,
           data,
         );
-      }
-
-      expect(functionValidator).toThrow(
-        new Error('Validator needs to be a valid address'),
-      );
-    });
+      }).toThrow(new Error('Validator needs to be a valid address'));
+    }
   });
 });
 
 describe('function signEthereumSignedMessage', () => {
   it('should return an object with the expected properties', () => {
-    testCases.forEach((data) => {
+    for (const data of testCases) {
       const signedObject = eip191Signer.signEthereumSignedMessage(
         data,
         signingKey,
@@ -101,7 +96,7 @@ describe('function signEthereumSignedMessage', () => {
       expect(signedObject).toHaveProperty('r');
       expect(signedObject).toHaveProperty('s');
       expect(signedObject).toHaveProperty('signature');
-    });
+    }
   });
 
   it('should sign correctly "Hello World"', () => {
@@ -118,7 +113,7 @@ describe('function signEthereumSignedMessage', () => {
 
 describe('function signDataWithIntendedValidator', () => {
   it('should return an object with the expected properties', () => {
-    testCases.forEach((data) => {
+    for (const data of testCases) {
       const signedObject = eip191Signer.signDataWithIntendedValidator(
         validatorAddress,
         data,
@@ -131,7 +126,7 @@ describe('function signDataWithIntendedValidator', () => {
       expect(signedObject).toHaveProperty('r');
       expect(signedObject).toHaveProperty('s');
       expect(signedObject).toHaveProperty('signature');
-    });
+    }
   });
   it('should sign correctly "Hello World"', () => {
     const signedObject = eip191Signer.signDataWithIntendedValidator(
@@ -148,7 +143,7 @@ describe('function signDataWithIntendedValidator', () => {
 
 describe('Recover the address of a signed EthereumSignedMessage', () => {
   it('should recover the signing address', () => {
-    testCases.forEach((data) => {
+    for (const data of testCases) {
       const messageData = eip191Signer.signEthereumSignedMessage(
         data,
         signingKey,
@@ -158,13 +153,13 @@ describe('Recover the address of a signed EthereumSignedMessage', () => {
       const recoveredAddress = eip191Signer.recover(hasedMessage, signature);
 
       expect(recoveredAddress).toBe(signingAddress);
-      expect(utils.isHexStrict(recoveredAddress)).toBeTruthy();
+      expect(isHexStrict(recoveredAddress)).toBeTruthy();
       expect(recoveredAddress.length).toBe(42);
-    });
+    }
   });
 
   it('should recover the signing address when the message is an object', () => {
-    testCases.forEach((data) => {
+    for (const data of testCases) {
       const messageData = eip191Signer.signEthereumSignedMessage(
         data,
         signingKey,
@@ -173,13 +168,13 @@ describe('Recover the address of a signed EthereumSignedMessage', () => {
       const recoveredAddress = eip191Signer.recover(messageData, signature);
 
       expect(recoveredAddress).toBe(signingAddress);
-    });
+    }
   });
 });
 
 describe(' Recover the address of a signed DataWithIntendedValidator', () => {
   it('should recover the signing address', () => {
-    testCases.forEach((data) => {
+    for (const data of testCases) {
       const messageData = eip191Signer.signDataWithIntendedValidator(
         validatorAddress,
         data,
@@ -190,13 +185,13 @@ describe(' Recover the address of a signed DataWithIntendedValidator', () => {
       const recoveredAddress = eip191Signer.recover(hasedMessage, signature);
 
       expect(recoveredAddress).toBe(signingAddress);
-      expect(utils.isHexStrict(recoveredAddress)).toBeTruthy();
+      expect(isHexStrict(recoveredAddress)).toBeTruthy();
       expect(recoveredAddress.length).toBe(42);
-    });
+    }
   });
 
   it('should recover the signing address when the message is an object', () => {
-    testCases.forEach((data) => {
+    for (const data of testCases) {
       const messageData = eip191Signer.signDataWithIntendedValidator(
         validatorAddress,
         data,
@@ -206,6 +201,6 @@ describe(' Recover the address of a signed DataWithIntendedValidator', () => {
       const recoveredAddress = eip191Signer.recover(messageData, signature);
 
       expect(recoveredAddress).toBe(signingAddress);
-    });
+    }
   });
 });
