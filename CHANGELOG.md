@@ -1,5 +1,18 @@
 # Changelog
 
+## [0.2.3](https://github.com/lukso-network/tools-eip191-signer/compare/v0.2.2...v0.2.3) (2025-02-13)
+
+
+### Bug Fixes
+
+* Add strict for isHex back in ([cb580ca](https://github.com/lukso-network/tools-eip191-signer/commit/cb580ca500e2f1750b53084bf6274ab25f2791c3))
+* adjust per review comments. ([bdf9ab5](https://github.com/lukso-network/tools-eip191-signer/commit/bdf9ab5b0af3164806ca1bba21388b93180c56b1))
+* For yarn berry versions for cache to be persistent it would need to be checked in, which is not what we want. ([aab6ae9](https://github.com/lukso-network/tools-eip191-signer/commit/aab6ae933665a5415fd21c812576c4e1158174df))
+* synced yarn.lock to after security upgrades ([306a2f5](https://github.com/lukso-network/tools-eip191-signer/commit/306a2f593e64875b5bd7abb09c4b55a9536004b2))
+* update message encoding with LSP25 version ([9885881](https://github.com/lukso-network/tools-eip191-signer/commit/988588164c92de31f56cea21271066a60d79b8f2))
+* Updated insecure dependencies ([824c342](https://github.com/lukso-network/tools-eip191-signer/commit/824c3422b3e714073afddb321db0930c87702dc7))
+* Upgrade to use viem. ([421f631](https://github.com/lukso-network/tools-eip191-signer/commit/421f631917156576b6974f1531fa39a118af5884))
+
 ## [0.2.2](https://github.com/lukso-network/tools-eip191-signer/compare/v0.2.1...v0.2.2) (2023-01-31)
 
 
