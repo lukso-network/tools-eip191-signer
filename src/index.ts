@@ -1,105 +1,110 @@
 /*
  This file contains functions to sign message for executeRelayCall.
 */
-import Account from 'eth-lib/lib/account';
-import { bufferToHex, keccak256 } from 'ethereumjs-util';
-import utils from 'web3-utils';
+import {
+  type Address,
+  type ByteArray,
+  hexToBytes,
+  isAddress,
+  isBytes,
+  isHex,
+  keccak256,
+  recoverAddress,
+  serializeSignature,
+  stringToBytes,
+} from 'viem';
+import { sign } from 'viem/accounts';
 
-import { Message } from './interfaces';
-
+import type { Message } from './interfaces';
 export class EIP191Signer {
-  hashEthereumSignedMessage(message: string) {
-    const messageHex = utils.isHexStrict(message)
+  hashEthereumSignedMessage(message: string | ByteArray): `0x${string}` {
+    const messageBytes = isBytes(message)
       ? message
-      : utils.utf8ToHex(message);
-    const messageBytes = utils.hexToBytes(messageHex);
-    const messageBuffer = Buffer.from(messageBytes);
-    const preamble =
-      '\x19' + '\x45' + 'thereum Signed Message:\n' + messageBytes.length;
-    const preambleBuffer = Buffer.from(preamble);
-    const ethMessage = Buffer.concat([preambleBuffer, messageBuffer]);
-    return bufferToHex(keccak256(ethMessage));
+      : isHex(message, { strict: true })
+      ? hexToBytes(message)
+      : stringToBytes(message);
+    const encoder = new TextEncoder();
+    const preambleBytes = encoder.encode(
+      `\x19\x45thereum Signed Message:\n${messageBytes.length}`,
+    );
+    const ethMessage = new Uint8Array(
+      preambleBytes.length + messageBytes.length,
+    );
+    ethMessage.set(preambleBytes, 0); // Add the byte array starting at index 0
+    ethMessage.set(messageBytes, preambleBytes.length); // Add the string bytes after
+    return keccak256(ethMessage, 'hex');
   }
-
-  hashDataWithIntendedValidator(validatorAddress: string, data: string) {
+  hashDataWithIntendedValidator(
+    validatorAddress: Address,
+    data: string | ByteArray,
+  ) {
     // validator address
-    if (!utils.isAddress(validatorAddress))
+    if (!isAddress(validatorAddress)) {
       throw new Error('Validator needs to be a valid address');
-
-    const validatorBuffer = Buffer.from(utils.hexToBytes(validatorAddress));
+    }
+    const validatorBytes = hexToBytes(validatorAddress);
     // data to sign
-    const dataHex = utils.isHexStrict(data) ? data : utils.utf8ToHex(data);
-    const dataBuffer = Buffer.from(utils.hexToBytes(dataHex));
-
+    const dataBytes = isBytes(data)
+      ? data
+      : isHex(data, { strict: true })
+      ? hexToBytes(data)
+      : stringToBytes(data);
     // concatenate it
-    const preambleBuffer = Buffer.from('\x19');
-    const versionBuffer = Buffer.from('\x00');
-    const ethMessage = Buffer.concat([
-      preambleBuffer,
-      versionBuffer,
-      validatorBuffer,
-      dataBuffer,
-    ]);
-    return bufferToHex(keccak256(ethMessage));
+    const encoder = new TextEncoder();
+    const preambleBytes = encoder.encode('\x19\x00');
+    const ethMessage = new Uint8Array(
+      preambleBytes.length + validatorBytes.length + dataBytes.length,
+    );
+    ethMessage.set(preambleBytes, 0); // Add the byte array starting at index 0
+    ethMessage.set(validatorBytes, preambleBytes.length); // Add the string bytes after
+    ethMessage.set(dataBytes, preambleBytes.length + validatorBytes.length); // Add the string bytes after
+    return keccak256(ethMessage, 'hex');
   }
 
-  signEthereumSignedMessage(message: string, privateKey: string): Message {
-    if (!privateKey.startsWith('0x')) {
-      privateKey = '0x' + privateKey;
-    }
-
-    // 64 hex characters + hex-prefix
-    if (privateKey.length !== 66) {
-      throw new Error('Private key must be 32 bytes long');
-    }
-
+  async signEthereumSignedMessage(
+    message: string,
+    privateKey: `0x${string}`,
+  ): Promise<Message> {
     const hash = this.hashEthereumSignedMessage(message);
-    const signature = Account.sign(hash, privateKey);
-    const vrs = Account.decodeSignature(signature);
+    const signature = await sign({ hash, privateKey, to: 'object' });
     return {
+      v: BigInt(0),
+      ...signature,
       message: message,
       messageHash: hash,
-      v: vrs[0],
-      r: vrs[1],
-      s: vrs[2],
-      signature: signature,
+      signature: serializeSignature(signature),
     };
   }
 
-  signDataWithIntendedValidator(
-    validatorAddress: string,
-    data: string,
-    privateKey: string,
-  ): Message {
-    if (!privateKey.startsWith('0x')) {
-      privateKey = '0x' + privateKey;
-    }
-
-    // 64 hex characters + hex-prefix
-    if (privateKey.length !== 66) {
-      throw new Error('Private key must be 32 bytes long');
-    }
+  async signDataWithIntendedValidator(
+    validatorAddress: Address,
+    data: string | ByteArray,
+    privateKey: `0x${string}`,
+  ): Promise<Message> {
     const hash = this.hashDataWithIntendedValidator(validatorAddress, data);
-    const signature = Account.sign(hash, privateKey);
-    const vrs = Account.decodeSignature(signature);
-
+    const signature = await sign({ hash, privateKey, to: 'object' });
     return {
+      v: BigInt(0),
+      ...signature,
       message: data,
       messageHash: hash,
-      v: vrs[0],
-      r: vrs[1],
-      s: vrs[2],
-      signature: signature,
+      signature: serializeSignature(signature),
     };
   }
 
-  recover(messageHash: string | Message, signature: string): string {
+  async recover(
+    messageHash: `0x${string}` | Message,
+    signature: `0x${string}`,
+  ): Promise<Address> {
     if (!!messageHash && typeof messageHash === 'object') {
       return this.recover(
         messageHash.messageHash,
-        Account.encodeSignature([messageHash.v, messageHash.r, messageHash.s]),
+        serializeSignature(messageHash),
       );
     }
-    return Account.recover(messageHash, signature);
+    return await recoverAddress({
+      hash: messageHash as `0x${string}`,
+      signature,
+    });
   }
 }
