@@ -53,6 +53,9 @@ jobs:
       # Publish to NPM
       - name: 📦 Publish to NPM
         if: env.SHOULD_RELEASE == 'true'
-        run: yarn npm publish --access public
+        run: |
+          echo "npmAuthToken: $NODE_AUTH_TOKEN" >> ./.yarnrc.yml
+          yarn npm publish --access public
+          git checkout -f ./.yarnrc.yml
         env:
           NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
