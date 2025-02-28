@@ -1,6 +1,6 @@
 {
   "name": "@lukso/eip191-signer.js",
-  "version": "0.2.4",
+  "version": "0.2.5",
   "description": "Helper Library to allows to sign any EIP191 data",
   "main": "build/main/src/index.js",
   "typings": "build/main/src/index.d.ts",
