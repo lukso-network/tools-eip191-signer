@@ -1,5 +1,12 @@
 # Changelog
 
+## [0.2.4](https://github.com/lukso-network/tools-eip191-signer/compare/v0.2.3...v0.2.4) (2025-02-28)
+
+
+### Bug Fixes
+
+* Repair public config. ([6e09cf6](https://github.com/lukso-network/tools-eip191-signer/commit/6e09cf61fe66c2d4c20b37160d1a5ab865a802c3))
+
 ## [0.2.3](https://github.com/lukso-network/tools-eip191-signer/compare/v0.2.2...v0.2.3) (2025-02-13)
 
 
