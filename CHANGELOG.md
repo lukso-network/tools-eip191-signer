@@ -1,5 +1,12 @@
 # Changelog
 
+## [0.2.5](https://github.com/lukso-network/tools-eip191-signer/compare/v0.2.4...v0.2.5) (2025-02-28)
+
+
+### Bug Fixes
+
+* Add .yarnrc.yml mods ([79ae9b6](https://github.com/lukso-network/tools-eip191-signer/commit/79ae9b6730eea8be11e0d54afc77ee2173cbc185))
+
 ## [0.2.4](https://github.com/lukso-network/tools-eip191-signer/compare/v0.2.3...v0.2.4) (2025-02-28)
 
 
