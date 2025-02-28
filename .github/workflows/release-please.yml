@@ -53,6 +53,6 @@ jobs:
       # Publish to NPM
       - name: 📦 Publish to NPM
         if: env.SHOULD_RELEASE == 'true'
-        run: yarn publish --access public
+        run: yarn npm publish --access public
         env:
           NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
