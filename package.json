@@ -67,5 +67,5 @@
   "dependencies": {
     "viem": "^2.23.2"
   },
-  "packageManager": "yarn@4.6.0"
+  "packageManager": "yarn@4.12.0"
 }
